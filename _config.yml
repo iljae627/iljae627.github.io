@@ -23,7 +23,7 @@ description: >- # used by seo meta and the atom feed
 
 # Fill in the protocol & hostname for your site.
 # E.g. 'https://username.github.io', note that it does not end with a '/'.
-url: 'https://iljae627.github.io'
+url: "https://iljae627.github.io"
 
 github:
   username: iljae627 # change to your GitHub username
@@ -99,7 +99,7 @@ theme_mode: # [light | dark]
 cdn:
 
 # the avatar on sidebar, support local or CORS resources
-avatar:
+avatar: assets/img/nuo.png
 
 # The URL of the site-wide social preview image used in SEO `og:image` meta tag.
 # It can be overridden by a customized `page.image` in front matter.
@@ -151,12 +151,12 @@ pwa:
 paginate: 10
 
 # The base URL of your site
-baseurl: '/iljae627'
+baseurl: "/iljae627"
 
 # ------------ The following options are not recommended to be modified ------------------
 
 kramdown:
-  footnote_backlink: '&#8617;&#xfe0e;'
+  footnote_backlink: "&#8617;&#xfe0e;"
   syntax_highlighter: rouge
   syntax_highlighter_opts: # Rouge Options › https://github.com/jneen/rouge#full-options
     css_class: highlight
@@ -174,7 +174,7 @@ collections:
 
 defaults:
   - scope:
-      path: '' # An empty string here means all files in the project
+      path: "" # An empty string here means all files in the project
       type: posts
     values:
       layout: post
@@ -188,7 +188,7 @@ defaults:
     values:
       comments: false
   - scope:
-      path: ''
+      path: ""
       type: tabs # see `site.collections`
     values:
       layout: page
@@ -207,15 +207,15 @@ compress_html:
     envs: [development]
 
 exclude:
-  - '*.gem'
-  - '*.gemspec'
+  - "*.gem"
+  - "*.gemspec"
   - docs
   - tools
   - README.md
   - LICENSE
   - purgecss.js
-  - '*.config.js'
-  - 'package*.json'
+  - "*.config.js"
+  - "package*.json"
 
 jekyll-archives:
   enabled: [categories, tags]
