@@ -1,5 +1,5 @@
 ---
-title: "Dreamhack: 포렌식 패스(Forensics Path) 워게임 풀이 및 도구 활용 정리"
+title: "Dreamhack: 포렌식 입문(Forensics Path) 워게임 풀이 및 도구 활용 정리"
 date: 2026-04-10 02:00:00 +0900
 categories: [CTF/Wargame]
 tags: [Dreamhack, Forensics, HxD, Autopsy, 워게임]
