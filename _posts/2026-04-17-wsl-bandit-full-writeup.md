@@ -13,7 +13,7 @@ tags: [WSL, Bandit, 리눅스, CLI, 정보보안, 워크게임, Writeup]
 ## 1. WSL2 환경 구축 (인증 사진 포함)
 
 ### **WSL2 설치 및 배포판 세팅**
-![WSL 설치 화면 1](여기에_이미지_링크_삽입)
+![WSL 설치 화면 1](/assets/img/bandit/p.jpg)
 * **명령어**: `wsl --install`
 
 ---
@@ -21,7 +21,7 @@ tags: [WSL, Bandit, 리눅스, CLI, 정보보안, 워크게임, Writeup]
 ## 2. Bandit 단계별 상세 라이트업 (0 → 25)
 
 ### **Level 0: 접속**
-![Bandit 0 결과](여기에_이미지_링크_삽입)
+![Bandit 0 결과](/assets/img/bandit/0.jpg)
 * **문제 분석**: 
   이 레벨의 목표는 SSH를 사용하여 게임 서버에 로그인하는 것입니다. 
   - Host: `bandit.labs.overthewire.org`
@@ -34,7 +34,7 @@ tags: [WSL, Bandit, 리눅스, CLI, 정보보안, 워크게임, Writeup]
   ssh bandit0@bandit.labs.overthewire.org -p 2220
 
 ### **Level 0 → 1**
-![Bandit 1 결과](여기에_이미지_링크_삽입)
+![Bandit 1 결과](/assets/img/bandit/1.jpg)
 * **문제 분석**: 
   홈 디렉토리의 `readme` 파일에 저장된 패스워드를 획득하여 `bandit1` 계정으로 로그인해야 합니다.
   - 파일 위치: `~/readme`
@@ -47,7 +47,7 @@ tags: [WSL, Bandit, 리눅스, CLI, 정보보안, 워크게임, Writeup]
   cat readme   # readme 파일 내용 출력 및 패스워드 확인 / 획득한 패스워드(ZjLjTmM6FvvyRnrb2rfNWOZOTa6ip5If)를 사용하여 다음 레벨로 접속합니다.
 
 ### **Level 1 → 2**
-![Bandit 2 결과](여기에_이미지_링크_삽입)
+![Bandit 2 결과](/assets/img/bandit/2.jpg)
 * **문제 분석**: 
   홈 디렉토리에 위치한 `-`라는 이름의 파일에서 다음 레벨의 패스워드를 획득해야 합니다.
   - 파일 위치: `~/-`
@@ -60,7 +60,7 @@ tags: [WSL, Bandit, 리눅스, CLI, 정보보안, 워크게임, Writeup]
   cat ./-      # 상대 경로를 명시하여 '-' 파일 내용 출력 / 획득한 패스워드(263JGJPfgU6LtdEvgfWU1XP5yac29mFx)를 사용하여 다음 레벨로 접속합니다.
 
 ### **Level 2 → 3**
-![Bandit 3 결과](여기에_이미지_링크_삽입)
+![Bandit 3 결과](/assets/img/bandit/3.jpg)
 * **문제 분석**: 
   홈 디렉토리에 위치한 공백과 특수 문자(`--`)가 포함된 파일에서 다음 레벨의 패스워드를 찾아야 합니다.
   - 파일 위치: `~/--spaces in this filename--`
@@ -73,7 +73,7 @@ tags: [WSL, Bandit, 리눅스, CLI, 정보보안, 워크게임, Writeup]
   cat "./--spaces in this filename--"    # 상대 경로와 따옴표를 사용하여 특수 파일 내용 출력 / 획득한 패스워드(MNk8KNH3Usiio41PRUEoDFPqfxLPlSmx)를 사용하여 다음 레벨로 접속합니다.
 
 ### **Level 3 → 4**
-![Bandit 4 결과](여기에_이미지_링크_삽입)
+![Bandit 4 결과](/assets/img/bandit/4.jpg)
 * **문제 분석**: 
   `inhere` 디렉토리 내부에 숨겨진 파일 형태로 저장된 다음 레벨의 패스워드를 찾아야 합니다.
   - 파일 위치: `~/inhere/...Hiding-From-You`
@@ -88,7 +88,7 @@ tags: [WSL, Bandit, 리눅스, CLI, 정보보안, 워크게임, Writeup]
   cat ...Hiding-From-You           # 숨김 파일 내용 출력 / 획득한 패스워드(2WmrDFRmJIq3IPxneAaMGhapOpFhF3NJ)를 사용하여 다음 레벨로 접속합니다.
 
 ### **Level 4 → 5**
-![Bandit 5 결과](여기에_이미지_링크_삽입)
+![Bandit 5 결과](/assets/img/bandit/5.jpg)
 * **문제 분석**: 
   `inhere` 디렉토리 내에 존재하는 여러 파일 중 유일하게 사람이 읽을 수 있는(human-readable) 형식의 파일을 찾아 패스워드를 획득해야 합니다.
   - 파일 위치: `~/inhere` 내 10개의 파일 (`-file00` ~ `-file09`)
@@ -102,7 +102,7 @@ tags: [WSL, Bandit, 리눅스, CLI, 정보보안, 워크게임, Writeup]
   cat ./-file07                 # 유일한 텍스트 파일인 -file07 내용 출력 / 획득한 패스워드(4oQYVPkxZ0OE005pTW81fB8j8lXGUoUw)를 사용하여 다음 레벨로 접속합니다.
 
 ### **Level 5 → 6**
-![Bandit 6 결과](여기에_이미지_링크_삽입)
+![Bandit 6 결과](/assets/img/bandit/6.jpg)
 * **문제 분석**: 
   `inhere` 디렉토리 하위의 수많은 파일 중 아래의 세 가지 조건을 모두 만족하는 파일을 찾아 패스워드를 획득해야 합니다.
   - 조건 1: 사람이 읽을 수 있는 형식 (human-readable)
@@ -114,11 +114,12 @@ tags: [WSL, Bandit, 리눅스, CLI, 정보보안, 워크게임, Writeup]
   ```bash
   cd inhere                     # inhere 디렉토리로 이동
   find . -type f -size 1033c ! -executable
-  # 검색 결과: ./maybehere07/.file2
+  **검색 결과**: ./maybehere07/.file2
   cat ./maybehere07/.file2      # 검색된 파일의 내용 출력 / 획득한 패스워드(DXjzPULLxYr17uocjS9SOnS9uE64h9cl)를 사용하여 다음 레벨로 접속합니다. 
 
 ### **Level 6 → 7**
-![Bandit 7 결과](여기에_이미지_링크_삽입)
+![Bandit 7 결과-1](/assets/img/bandit/7.jpg)
+![Bandit 7 결과-2](/assets/img/bandit/7-1.jpg)
 * **문제 분석**: 
   패스워드가 서버 어딘가에 저장되어 있으며, 아래의 세 가지 조건을 모두 만족하는 파일을 찾아야 합니다.
   - 소유자(owner): `bandit7`
@@ -132,7 +133,7 @@ tags: [WSL, Bandit, 리눅스, CLI, 정보보안, 워크게임, Writeup]
   cat /var/lib/dpkg/info/bandit7.password                    # 검색된 파일 내용 출력 / 획득한 패스워드(morbNTDS6WjILUc0ymOdMaLn0LFVAaj)를 사용하여 다음 레벨로 접속합니다.
 
 ### **Level 7 → 8**
-![Bandit 8 결과](여기에_이미지_링크_삽입)
+![Bandit 8 결과](/assets/img/bandit/8.jpg)
 * **문제 분석**: 
   홈 디렉토리에 있는 `data.txt` 파일 내에서 `millionth`라는 단어 바로 옆에 저장된 패스워드를 찾아야 합니다.
   - 파일 위치: `~/data.txt`
@@ -145,7 +146,7 @@ tags: [WSL, Bandit, 리눅스, CLI, 정보보안, 워크게임, Writeup]
   grep "millionth" data.txt   # 'millionth' 단어가 포함된 줄을 검색하여 패스워드 확인 / 획득한 패스워드(dfwvzFQi4mU0wfNbFOe9RoWskMLg7eEc)를 사용하여 다음 레벨로 접속합니다.
 
 ### **Level 8 → 9**
-![Bandit 9 결과](여기에_이미지_링크_삽입)
+![Bandit 9 결과](/assets/img/bandit/9.jpg)
 * **문제 분석**: 
   홈 디렉토리의 `data.txt` 파일 내에서 딱 한 번만 등장하는 줄을 찾아 패스워드를 획득해야 합니다.
   - 파일 위치: `~/data.txt`
@@ -158,7 +159,7 @@ tags: [WSL, Bandit, 리눅스, CLI, 정보보안, 워크게임, Writeup]
   sort data.txt | uniq -u     # 데이터를 정렬한 후 중복 없는 줄만 출력 / 획득한 패스워드(4CKMh1JI91bUIZZPXDqGanal4xvAg0JM)를 사용하여 다음 레벨로 접속합니다.
 
 ### **Level 9 → 10**
-![Bandit 10 결과](여기에_이미지_링크_삽입)
+![Bandit 10 결과](/assets/img/bandit/10.jpg)
 * **문제 분석**: 
   홈 디렉토리의 바이너리 파일 `data.txt`에서 특정 패턴(`=`) 뒤에 숨겨진 사람이 읽을 수 있는 패스워드를 찾아야 합니다.
   - 파일 위치: `~/data.txt`
@@ -171,7 +172,7 @@ tags: [WSL, Bandit, 리눅스, CLI, 정보보안, 워크게임, Writeup]
   strings data.txt | grep "=" # 바이너리에서 문자열 추출 후 '=' 패턴 필터링 / 획득한 패스워드(FGUW5ilLVJrxX9kMYMmLN4MgbpfMiqey)를 사용하여 다음 레벨로 접속합니다.
 
 ### **Level 10 → 11**
-![Bandit 11 결과](여기에_이미지_링크_삽입)
+![Bandit 11 결과](/assets/img/bandit/11.jpg)
 * **문제 분석**: 
   홈 디렉토리의 `data.txt` 파일에 Base64로 인코딩된 패스워드가 저장되어 있습니다.
   - 파일 위치: `~/data.txt`
@@ -185,7 +186,8 @@ tags: [WSL, Bandit, 리눅스, CLI, 정보보안, 워크게임, Writeup]
   base64 -d data.txt          # Base64 디코딩 수행 / 획득한 패스워드(dtR173fZKb0RRsDFSGsg2RWnpNVj3qRr)를 사용하여 다음 레벨로 접속합니다.
 
 ### **Level 11 → 12**
-![Bandit 12 결과](여기에_이미지_링크_삽입)
+![Bandit 12 결과-1](/assets/img/bandit/12.jpg)
+![Bandit 12 결과-2](/assets/img/bandit/12-1.jpg)
 * **문제 분석**: 
   홈 디렉토리의 `data.txt` 파일에 ROT13으로 암호화된 패스워드가 저장되어 있습니다.
   - 파일 위치: `~/data.txt`
@@ -196,10 +198,11 @@ tags: [WSL, Bandit, 리눅스, CLI, 정보보안, 워크게임, Writeup]
   ```bash
   ls                          # 현재 디렉토리 파일 목록 확인
   cat data.txt                # ROT13으로 암호화된 데이터 확인
-  # ROT13 복호화 수행 / 획득한 패스워드(7x16WNeHi5YklhWsfFqoognUTyj9Q4)를 사용하여 다음 레벨로 접속합니다.
+  ROT13 복호화 수행 / 획득한 패스워드(7x16WNeHi5YklhWsfFqoognUTyj9Q4)를 사용하여 다음 레벨로 접속합니다.
 
 ### **Level 12 → 13**
-![Bandit 13 결과](여기에_이미지_링크_삽입)
+![Bandit 13 결과-1](/assets/img/bandit/13.jpg)
+![Bandit 13 결과-2](/assets/img/bandit/13-1.jpg)
 * **문제 분석**: 
   홈 디렉토리에 있는 `data.txt` 파일은 여러 번 반복적으로 압축된 바이너리 파일의 **hex dump** 형태입니다. 단순히 `cat`으로 읽을 수 없으며, 이를 다시 바이너리로 복원한 뒤 파일의 성격을 파악해가며 껍질을 한 꺼풀씩 벗겨내야 합니다.
   - 파일 위치: `~/data.txt`
@@ -228,7 +231,9 @@ tags: [WSL, Bandit, 리눅스, CLI, 정보보안, 워크게임, Writeup]
   cat data8                               # 패스워드 확인 / 획득한 패스워드(FO5dwfsc0bau4h8J2eUks2vdTDWAn)를 사용하여 다음 레벨로 접속합니다.
 
 ### **Level 13 → 14**
-![Bandit 14 결과](여기에_이미지_링크_삽입)
+![Bandit 14 결과-1](/assets/img/bandit/14.jpg)
+![Bandit 14 결과-2](/assets/img/bandit/14-1.jpg)
+![Bandit 14 결과-3](/assets/img/bandit/14-2.jpg)
 * **문제 분석**: 
   다음 레벨인 `bandit14` 계정의 패스워드 파일(`/etc/bandit_pass/bandit14`)은 오직 해당 계정 소유자만 읽을 수 있습니다. 현재 홈 디렉토리에 있는 SSH 개인키(`sshkey.private`)를 활용하여 비밀번호 없이 `bandit14` 계정으로 로그인한 뒤 패스워드를 추출해야 합니다.
   - 파일 위치: `~/sshkey.private`
@@ -242,12 +247,13 @@ tags: [WSL, Bandit, 리눅스, CLI, 정보보안, 워크게임, Writeup]
   ```bash
   ls -l                                      # 개인키 파일 확인
   file sshkey.private                        # PEM RSA private key 형식 확인
-  # (윈도우 환경 등에서 작업 시 icacls 등을 이용해 키 파일 권한 수정 필요)
+  (윈도우 환경 등에서 작업 시 icacls 등을 이용해 키 파일 권한 수정 필요)
   ssh -i sshkey.private bandit14@localhost -p 2220  # 개인키를 사용하여 bandit14로 로그인
   cat /etc/bandit_pass/bandit14              # 로그인 후 실제 패스워드 파일 내용 확인 / 획득한 패스워드를 사용하여 다음 레벨로 접속합니다.
 
 ### **Level 14 → 15**
-![Bandit 15 결과](여기에_이미지_링크_삽입)
+![Bandit 15 결과-1](/assets/img/bandit/15.jpg)
+![Bandit 15 결과-2](/assets/img/bandit/15-1.jpg)
 * **문제 분석**: 
   현재 레벨(`bandit14`)의 패스워드를 `localhost`의 `30000`번 포트로 전송하여 다음 레벨의 패스워드를 응답받아야 합니다.
   - 대상 호스트: `localhost`
@@ -266,7 +272,8 @@ tags: [WSL, Bandit, 리눅스, CLI, 정보보안, 워크게임, Writeup]
   획득한 패스워드(8xCxjmgoKbGLhHFAZlGE5tmuHM2tKJQo)를 사용하여 다음 레벨로 접속합니다.  
 
 ### **Level 15 → 16**
-![Bandit 16 결과](여기에_이미지_링크_삽입)
+![Bandit 16 결과-1](/assets/img/bandit/16.jpg)
+![Bandit 16 결과-2](/assets/img/bandit/16-1.jpg)
 * **문제 분석**: 
   현재 레벨(`bandit15`)의 패스워드를 `localhost`의 `30001`번 포트로 전송해야 합니다. 이전 단계와 비슷하지만, 이번에는 **SSL/TLS 암호화 연결**을 사용해야 한다는 조건이 추가되었습니다.
   - 대상 호스트: `localhost`
@@ -293,7 +300,10 @@ tags: [WSL, Bandit, 리눅스, CLI, 정보보안, 워크게임, Writeup]
   획득한 패스워드(kSkvUpMQ7lBYyCM4GBPvCvT1BfWRy0Dx)를 사용하여 다음 레벨로 접속합니다.
 
 ### **Level 16 → 17**
-![Bandit 17 결과](여기에_이미지_링크_삽입)
+![Bandit 17 결과-1](/assets/img/bandit/17.jpg)
+![Bandit 17 결과-2](/assets/img/bandit/17-1.jpg)
+![Bandit 17 결과-3](/assets/img/bandit/17-2.jpg)
+![Bandit 17 결과-4](/assets/img/bandit/17-3.jpg)
 
 * **접속 정보**
     - `ssh bandit16@bandit.labs.overthewire.org -p 2220`
@@ -339,7 +349,7 @@ tags: [WSL, Bandit, 리눅스, CLI, 정보보안, 워크게임, Writeup]
     ```
 
 ### **Level 17 → 18**
-![Bandit 18 결과](여기에_이미지_링크_삽입)
+![Bandit 18 결과](/assets/img/bandit/18.jpg)
 
 * **접속 정보**
     - `ssh -i [key.pem] bandit17@bandit.labs.overthewire.org -p 2220`
@@ -376,7 +386,7 @@ tags: [WSL, Bandit, 리눅스, CLI, 정보보안, 워크게임, Writeup]
     - **학습 내용**: `diff` 명령어를 통한 텍스트 데이터 비교 원리 및 표준 출력(Standard Output)의 기호 의미 파악.
 
 ### **Level 18 → 19**
-![Bandit 19 결과](여기에_이미지_링크_삽입)
+![Bandit 19 결과](/assets/img/bandit/19.jpg)
 
 * **접속 정보**
     - `ssh bandit18@bandit.labs.overthewire.org -p 2220`
@@ -406,7 +416,7 @@ tags: [WSL, Bandit, 리눅스, CLI, 정보보안, 워크게임, Writeup]
     - **학습 내용**: SSH의 원격 명령 실행 기능 및 쉘 초기화 스크립트(`.bashrc`)의 동작 메커니즘 이해.
 
 ### **Level 19 → 20**
-![Bandit 20 결과](여기에_이미지_링크_삽입)
+![Bandit 20 결과](/assets/img/bandit/20.jpg)
 
 * **접속 정보**
     - `ssh bandit19@bandit.labs.overthewire.org -p 2220`
@@ -444,7 +454,8 @@ tags: [WSL, Bandit, 리눅스, CLI, 정보보안, 워크게임, Writeup]
     - **학습 내용**: SetUID 권한이 부여된 실행 파일의 동작 방식 및 보안상 잠재적 위험성(권한 상승)에 대한 이해.
 
 ### **Level 20 → 21**
-![Bandit 21 결과](여기에_이미지_링크_삽입)
+![Bandit 21 결과-1](/assets/img/bandit/21.jpg)
+![Bandit 21 결과-2](/assets/img/bandit/21-1.jpg)
 
 * **접속 정보**
     - `ssh bandit20@bandit.labs.overthewire.org -p 2220`
@@ -488,7 +499,7 @@ tags: [WSL, Bandit, 리눅스, CLI, 정보보안, 워크게임, Writeup]
     - **학습 내용**: 네트워크 소켓 통신을 통한 데이터 검증 과정과 클라이언트-서버 구조의 기본적인 동작 이해.
 
 ### **Level 21 → 22**
-![Bandit 22 결과](여기에_이미지_링크_삽입)
+![Bandit 22 결과](/assets/img/bandit/22.jpg)
 
 * **접속 정보**
     - `ssh bandit21@bandit.labs.overthewire.org -p 2220`
@@ -535,7 +546,7 @@ tags: [WSL, Bandit, 리눅스, CLI, 정보보안, 워크게임, Writeup]
         * **Cron Job Analysis**: 시스템 백그라운드에서 주기적으로 돌아가는 프로세스를 모니터링하고 분석하는 역량을 습득했습니다.
 
 ### **Level 22 → 23**
-![Bandit 23 결과](여기에_이미지_링크_삽입)
+![Bandit 23 결과](/assets/img/bandit/23.jpg)
 
 * **접속 정보**
     - `ssh bandit22@bandit.labs.overthewire.org -p 2220`
@@ -583,7 +594,8 @@ tags: [WSL, Bandit, 리눅스, CLI, 정보보안, 워크게임, Writeup]
         * **Pipeline Analysis**: `md5sum`을 통한 해시 생성과 `cut`을 이용한 문자열 파싱 과정을 정확히 이해하여 데이터의 흐름을 추적했습니다.
 
 ### **Level 23 → 24**
-![Bandit 24 결과](여기에_이미지_링크_삽입)
+![Bandit 24 결과-1](/assets/img/bandit/24.jpg)
+![Bandit 24 결과-2](/assets/img/bandit/24-1.jpg)
 
 * **접속 정보**
     - `ssh bandit23@bandit.labs.overthewire.org -p 2220`
@@ -632,7 +644,9 @@ tags: [WSL, Bandit, 리눅스, CLI, 정보보안, 워크게임, Writeup]
         * **Temporary Privilege Escalation**: 크론탭과 같은 백그라운드 서비스의 허점을 이용해 일시적인 권한 상승을 유도하는 기법을 습득했습니다.
 
 ### **Level 24 → 25**
-![Bandit 25 결과](여기에_이미지_링크_삽입)
+![Bandit 25 결과-1](/assets/img/bandit/25.jpg)
+![Bandit 25 결과-2](/assets/img/bandit/25-1.jpg)
+![Bandit 25 결과-3](/assets/img/bandit/25-2.jpg)
 
 * **접속 정보**
     - `ssh bandit24@bandit.labs.overthewire.org -p 2220`
