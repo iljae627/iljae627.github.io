@@ -261,9 +261,9 @@ tags: [WSL, Bandit, 리눅스, CLI, 정보보안, 워크게임, Writeup]
   ```bash
   cat /etc/bandit_pass/bandit14              # 현재 레벨 패스워드(MU4VWeTyJk8ROof1qqmcBPaLh7lDCPvS) 확인
   nc localhost 30000                         # 30000번 포트 접속 후 패스워드 입력
-  # 방법 1: echo "MU4VWeTyJk8ROof1qqmcBPaLh7lDCPvS" | nc localhost 30000
-  # 방법 2: echo "MU4VWeTyJk8ROof1qqmcBPaLh7lDCPvS" > /dev/tcp/localhost/30000
-  # 획득한 패스워드(8xCxjmgoKbGLhHFAZlGE5tmuHM2tKJQo)를 사용하여 다음 레벨로 접속합니다.  
+  방법 1: echo "MU4VWeTyJk8ROof1qqmcBPaLh7lDCPvS" | nc localhost 30000
+  방법 2: echo "MU4VWeTyJk8ROof1qqmcBPaLh7lDCPvS" > /dev/tcp/localhost/30000
+  획득한 패스워드(8xCxjmgoKbGLhHFAZlGE5tmuHM2tKJQo)를 사용하여 다음 레벨로 접속합니다.  
 
 ### **Level 15 → 16**
 ![Bandit 16 결과](여기에_이미지_링크_삽입)
@@ -279,18 +279,18 @@ tags: [WSL, Bandit, 리눅스, CLI, 정보보안, 워크게임, Writeup]
   연결이 수립된 후 `bandit15`의 패스워드를 입력하면 서버가 이를 검증하고 다음 레벨의 패스워드를 응답합니다. `-quiet` 옵션을 사용하면 인증서 정보나 핸드세이크 과정의 상세 로그를 생략하고 깔끔하게 결과값만 확인할 수 있습니다.
 
   ```bash
-  # 방법 1: 대화형 접속 (상세 정보 출력됨)
+  방법 1: 대화형 접속 (상세 정보 출력됨)
   openssl s_client -connect localhost:30001
-  # 접속 완료 후 bandit15 패스워드(8xCxjmgoKbGLhHFAZlGE5tmuHM2tKJQo) 직접 입력
+  접속 완료 후 bandit15 패스워드(8xCxjmgoKbGLhHFAZlGE5tmuHM2tKJQo) 직접 입력
 
-  # 방법 2: 파이프를 이용한 한 줄 명령어 (추천)
+  방법 2: 파이프를 이용한 한 줄 명령어 (추천)
   echo "8xCxjmgoKbGLhHFAZlGE5tmuHM2tKJQo" | openssl s_client -connect localhost:30001 -quiet
   
-  # 출력 결과:
-  # Correct!
-  # kSkvUpMQ7lBYyCM4GBPvCvT1BfWRy0Dx
+  출력 결과:
+  Correct!
+  kSkvUpMQ7lBYyCM4GBPvCvT1BfWRy0Dx
   
-  # 획득한 패스워드(kSkvUpMQ7lBYyCM4GBPvCvT1BfWRy0Dx)를 사용하여 다음 레벨로 접속합니다.
+  획득한 패스워드(kSkvUpMQ7lBYyCM4GBPvCvT1BfWRy0Dx)를 사용하여 다음 레벨로 접속합니다.
 
 ### **Level 16 → 17**
 ![Bandit 17 결과](여기에_이미지_링크_삽입)
