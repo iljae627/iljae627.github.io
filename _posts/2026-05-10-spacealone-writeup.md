@@ -1240,13 +1240,3 @@ p.interactive()
 1. **Full RELRO 우회**: 바이너리에 Full RELRO가 걸려 있어도 연관된 라이브러리(Libc)가 Partial RELRO라면 GOT Overwrite의 타겟이 될 수 있습니다.
 2. **FSB의 범용성**: 포맷 스트링 취약점은 단순한 주소 유출을 넘어, 메모리 쓰기 제한이 있는 환경에서 실행 흐름을 뒤바꾸는 핵심 도구가 됩니다.
 3. **Pwnable의 마침표**: 정보 유출부터 흐름 제어까지, 그동안 배운 모든 기법을 유기적으로 연결해야 해결할 수 있는 완성도 높은 문제였습니다.
-
-
-**Thank you for playing!**
-
-
----
-
-
-**Environment Developer**: Arkea, Osori  
-**Special Thanks**: mongii(LOB)
