@@ -1,5 +1,5 @@
 ---
-title: "[보안 입문] 퍼징(Fuzzing)의 기초 개념과 핵심 오픈소스 퍼저(Fuzzer) 3대장 탐구"
+title: "퍼징(Fuzzing)의 기초 개념과 핵심 오픈소스 퍼저(Fuzzer) 탐구"
 date: 2026-05-17 16:30:00 +0900
 categories: [Security, Fuzzing]
 tags: [fuzzing, fuzzer, afl++, jackalope, libfuzzer, 시스템보안, 입문연구]
