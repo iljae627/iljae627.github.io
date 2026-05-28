@@ -1,6 +1,6 @@
 ---
 title: "판교 SK쉴더스 본사 견학 후기"
-date: 2026-05-28 22:00:00 +0900
+date: 2026-05-28 17:00:00 +0900
 categories: [Life, Review]
 tags: [SK쉴더스, 기업견학, 보안관제, 대학생, 일상]
 toc: true
