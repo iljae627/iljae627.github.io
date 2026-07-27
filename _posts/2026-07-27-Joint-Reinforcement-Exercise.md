@@ -1,6 +1,6 @@
 ---
 title: HSPACE 합동강화훈련 회고
-date: 2026-07-27 13:00:00 +0900
+date: 2026-07-27 13:25:00 +0900
 categories: [Retrospective, HSPACE]
 tags: [HSPACE, 회고, CS, 보안, 옵시디언, 열품타, 프로젝트, 서버개발]
 math: true
