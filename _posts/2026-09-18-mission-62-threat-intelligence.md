@@ -13,7 +13,9 @@ mermaid: true
 - 자료 A: Huntress, [Targeted APT Activity: BABYSHARK Is Out for Blood](https://www.huntress.com/blog/targeted-apt-activity-babyshark-is-out-for-blood)
 - 자료 B: AhnLab ASEC, [개인정보 유출 관련 내용으로 위장한 피싱 메일 유포 (Konni)](https://asec.ahnlab.com/ko/59625/)
 
-먼저 결론부터 쓰면 자료 A의 P는 **Kimsuky(김수키)**, 자료 B의 Q는 **Konni(코니)**다. 다만 조사하면서 가장 먼저 부딪힌 문제는 이름이었다. KONNI는 처음부터 공격 조직 이름이 아니었고, BABYSHARK도 행위자 이름이 아닌 악성코드 이름이었다.
+처음 자료를 읽었을 때는 P를 **Kimsuky(김수키)**, Q를 **Konni(코니)**라고 적으면 끝날 줄 알았다. 그런데 원문을 다시 읽으니 그렇게 단정하기에는 문제가 있었다. 자료 A의 Huntress는 공격자를 Kimsuky라고 부르지 않고 **BABYSHARK를 사용하는 북한 국가 지원 행위자**라고만 적었다. 반면 자료 B의 ASEC은 Q를 **Konni 공격 그룹**이라고 명시한다. 결국 P의 정확한 세부 행위자명은 미확정이고, Kimsuky는 P를 설명하기 위해 검토할 수 있는 상위 분류 중 하나라고 정리했다.
+
+이 차이를 놓치면 악성코드명, 캠페인명, 행위자명을 같은 것으로 취급하게 된다. KONNI도 처음부터 조직명이 아니었고, BABYSHARK 역시 행위자가 아니라 악성코드 이름이었다.
 
 따라서 단순히 이름을 검색해 같은 그룹이라고 결론 내리지 않고 다음 순서로 자료를 확인했다.
 
@@ -26,7 +28,7 @@ flowchart LR
     E --> F[확신도와 미해결점 기록]
 ```
 
-## 2. 자료 A의 공격자 P: Kimsuky
+## 2. 자료 A의 공격자 P: BABYSHARK 사용 DPRK 행위자
 
 ![Huntress BABYSHARK 원문 확인](/assets/img/mission-62-threat-intelligence/04-huntress-babyshark.png)
 _자료 A 원문. 북한 관련 싱크탱크를 겨냥한 BABYSHARK 침해사고를 다룬다._
@@ -45,12 +47,12 @@ Huntress가 조사한 사건은 핵·국가안보 관련 싱크탱크를 겨냥�
 
 Huntress 원문은 행위자를 곧바로 Kimsuky라고 단정하지 않고 “북한 국가 지원 행위자”와 BABYSHARK 악성코드로 설명한다. BABYSHARK를 처음 공개한 [Palo Alto Networks Unit 42 보고서](https://unit42.paloaltonetworks.com/new-babyshark-malware-targets-u-s-national-security-think-tanks/)도 KimJongRAT·STOLEN PENCIL과의 연결 및 자원 공유 가능성을 제시했을 뿐, 당시 본문에서 Kimsuky라는 이름을 직접 쓰지는 않았다.
 
-현재 [MITRE ATT&CK의 Kimsuky 항목](https://attack.mitre.org/groups/G0094/)은 BABYSHARK를 Kimsuky가 사용하는 소프트웨어로 분류한다. 자료 A의 표적, 사회공학 방식, 악성코드 계보와 이 후대 분류를 함께 고려해 P를 **Kimsuky**로 식별했다.
+현재 [MITRE ATT&CK의 Kimsuky 항목](https://attack.mitre.org/groups/G0094/)은 BABYSHARK를 Kimsuky가 사용하는 소프트웨어로 분류한다. 이것은 P를 Kimsuky 맥락에서 살펴볼 근거는 되지만, MITRE의 소프트웨어 매핑만으로 Huntress가 본 2021년 침해의 세부 운영자까지 확정되는 것은 아니다. 그래서 이 글에서는 P를 **“BABYSHARK를 사용한 DPRK 연계 행위자”**로 두고, Kimsuky는 가능한 상위 활동 집합으로 다룬다.
 
 ![MITRE ATT&CK Kimsuky 그룹 항목](/assets/img/mission-62-threat-intelligence/07-mitre-kimsuky.png)
 _MITRE ATT&CK은 Kimsuky를 G0094로 관리하며 여러 연구사의 별칭을 함께 제시한다._
 
-## 3. Kimsuky라는 이름은 어디에서 왔나
+## 3. P와 관련해 살펴본 Kimsuky 명명 계보
 
 공개적으로 Kimsuky라는 이름을 사용한 초기 원전은 Kaspersky가 2013년 9월 11일 공개한 [The “Kimsuky” Operation: A North Korean APT?](https://securelist.com/the-kimsuky-operation-a-north-korean-apt/57915/)다.
 
@@ -107,9 +109,11 @@ Talos는 2014년부터 2017년까지의 네 캠페인을 비교했다.
 
 Talos는 당시 운영자의 국가나 기존 APT 그룹을 확정하지 않았다. 이후 보안업체들이 KONNI 악성코드를 사용하는 캠페인과 운영자 클러스터를 “Konni Group”으로 부르면서 악성코드명과 행위자명이 겹치게 됐다.
 
-## 6. Kimsuky와 Konni를 연결하는 증거
+## 6. P와 Q를 연결할 수 있을까
 
-둘의 관계를 가장 구체적으로 다룬 공개 자료는 이스트시큐리티 ESRC가 2019년에 발표한 [APT 캠페인 'Konni' & 'Kimsuky' 조직의 공통점 발견](https://www.estsecurity.com/enterprise/security-center/notice/view/434)이다.
+먼저 두 출발 보고서만 나란히 놓고 봤다. A의 C2는 `hodbeast[.]com`, `worldinfocontact[.]club`, `frebough[.]com` 등이었다. B는 분석 당시 C2가 닫혀 있어 최종 명령과 후속 인프라를 확인하지 못했다. **A와 B의 정확한 두 사건 사이에서 같은 도메인·IP·인증서가 재사용됐다는 공개 근거는 찾지 못했다.** 비슷한 피싱과 스크립트를 썼다는 이유만으로 같은 팀이라고 하기에는 부족했다.
+
+그 다음 더 넓은 클러스터 관계를 확인했다. 이스트시큐리티 ESRC의 2019년 [APT 캠페인 'Konni' & 'Kimsuky' 조직의 공통점 발견](https://www.estsecurity.com/enterprise/security-center/notice/view/434)은 Konni와 Kimsuky로 분류한 여러 과거 캠페인의 중복을 비교한다. 다만 아래 근거들은 자료 A와 B의 해당 샘플을 직접 비교한 결과가 아니라, **더 넓은 Konni–Kimsuky 활동 집합에서 발견된 연결점**이다.
 
 ![ESRC Konni Kimsuky 연관성 보고서](/assets/img/mission-62-threat-intelligence/06-esrc-link-report.png)
 _두 클러스터의 코드·도구·인프라 중복을 분석한 ESRC 보고서._
@@ -178,21 +182,37 @@ ESRC는 2021년 [코니(Konni)조직을 탈륨(Thallium)으로 통합 분류](ht
 
 그러나 모든 연구기관이 완전히 같은 분류를 사용하지는 않는다. MITRE의 [KONNI 항목](https://attack.mitre.org/software/S0356/)은 북한 연계 캠페인과 NOKKI 코드 중복을 설명하면서 APT37 연결 가능성도 함께 남긴다. 같은 샘플을 어느 범위의 그룹으로 묶을지는 연구사가 가진 가시성과 분류 기준에 따라 달라질 수 있다.
 
+### 6.5 Proofpoint의 TA406·TA427 분류
+
+관계를 이해하는 데 가장 도움이 된 자료는 Proofpoint의 2021년 [Triple Threat: North Korea-Aligned TA406 Scams, Spies, and Steals](https://www.proofpoint.com/au/blog/threat-insight/triple-threat-north-korea-aligned-ta406-scams-spies-and-steals)였다. Proofpoint는 공개적으로 Kimsuky·Thallium·Konni Group이라고 불리는 넓은 활동을 하나로 뭉치지 않고 **TA406, TA408, TA427**로 나누어 추적한다.
+
+- TA406은 공개 자료에서 Kimsuky·Thallium·Konni Group으로 추적되는 활동의 일부로 평가한다.
+- TA406은 KONNI, SANNY, CARROTBAT/CARROTBALL뿐 아니라 BABYSHARK에도 접근한 것으로 본다.
+- 그러나 Proofpoint는 TA406이 BABYSHARK의 최초 사용자는 아니라고 설명한다.
+- TA427 역시 별도의 하위 행위자로서 BABYSHARK를 사용했다.
+
+이 분류를 따르면 Konni로도 불리는 TA406과 BABYSHARK 사용이 관찰된 TA427은 넓은 Kimsuky 우산 아래 존재하지만, **서로 구분되는 행위자**다. 즉 도구 접근과 상위 생태계의 관계는 설명할 수 있어도, Huntress 사건의 P가 곧 TA406 또는 Konni라는 결론은 나오지 않는다.
+
+Palo Alto Networks도 [The Fractured Statue Campaign](https://unit42.paloaltonetworks.com/the-fractured-statue-campaign-u-s-government-targeted-in-spear-phishing-attacks/)에서 Konni가 원래 RAT 이름이었으나, KONNI RAT 없이도 TTP가 겹치는 후속 활동이 나타나면서 연구자들이 운영자를 Konni Group이라고 부르게 됐다고 설명한다. 동시에 공개된 TTP를 모방한 복제나 false flag 가능성 때문에 해당 캠페인의 Konni 귀속을 **moderate confidence**로 제한했다. 이 대목 때문에 나도 코드와 전술이 비슷하다는 이유만으로 관계를 확정하지 않기로 했다.
+
 ## 7. 최종 판단
 
-내 결론은 다음과 같다.
+조사 초반에는 ESRC의 코드와 인프라 중복을 보고 “Konni는 Kimsuky의 하위 조직”이라고 결론을 내렸다. 하지만 A와 B의 정확한 두 사건을 다시 구분하고 Proofpoint와 MITRE의 분류까지 비교하니 그 문장은 너무 강했다.
 
-> **Konni는 Kimsuky와 완전히 무관한 별도 조직이라기보다, Kimsuky와 개발·도구·인프라를 공유한 하위 클러스터 또는 같은 운영 생태계의 활동 묶음일 가능성이 높다.** 다만 공개 자료만으로 “언제나 동일한 사람들이 수행한 하나의 팀”이라고 단정하기는 어렵다.
+수정한 결론은 다음과 같다.
+
+> **P와 Q가 같은 조직이라고 확정할 근거는 부족하다. 둘 다 DPRK 연계 활동이라는 점은 강하게 뒷받침되며, Proofpoint의 분류를 채택하면 Kimsuky라는 넓은 생태계 안에서 도구와 개발 자원을 공유했을 가능성은 있다. 그러나 P의 정확한 하위 행위자는 미확정이고, A와 B 사이의 직접 인프라 재사용도 확인되지 않았다.**
 
 확신도를 나누면 다음과 같다.
 
 | 판단 | 확신도 | 이유 |
 |---|---|---|
 | 두 활동 모두 북한 연계 | 높음 | 장기간 반복된 표적·언어·작전 목적과 다수 기관 분석 |
-| Kimsuky와 Konni 사이 운영 연계 | 중간~높음 | 코드·암호·커스텀 도구·C2·IP 중복 |
-| 두 이름이 항상 동일한 단일 팀 | 낮음~중간 | 업체별 분류 차이, KONNI가 원래 악성코드명이라는 문제 |
+| Proofpoint 분류를 전제로 한 상위 생태계 관계 | 중간 | TA406·TA427을 Kimsuky 아래 별도 행위자로 추적하며 BABYSHARK 접근도 관찰 |
+| Huntress 사건 P의 정확한 세부 귀속 | 낮음/미확정 | Huntress는 Kimsuky·TA427·TA406 중 하나를 직접 명시하지 않음 |
+| 자료 A와 B의 동일 세부 운영팀 | 낮음 | 동일 C2·IP·인증서 등 직접 인프라 연결을 확인하지 못함 |
 
-따라서 `Kimsuky = Konni`라고 간단히 등호를 긋기보다 **관측 시기와 연구사에 따라 경계가 달라지는 중첩 클러스터**라고 표현하는 것이 가장 정확하다고 생각한다.
+따라서 `Kimsuky = Konni` 또는 `P = Kimsuky`라고 등호를 긋기보다, **벤더별로 경계가 다른 DPRK 연계 클러스터이며 일부 도구·개발 자원의 공유 가능성이 관찰된다**고 쓰는 편이 정확하다고 생각한다.
 
 ## 8. 조사하면서 새로 알게 된 점
 
@@ -208,6 +228,8 @@ Kimsuky, Thallium, Emerald Sleet, APT43 같은 이름은 연구기관이 자기 
 
 미끼 주제와 표적은 쉽게 따라 할 수 있다. IP도 VPN이나 침해 서버일 수 있다. 반면 고유 코드 루틴, 커스텀 도구, 압축 암호, 인프라와 활동 시간이 함께 연결되면 귀속 판단은 훨씬 강해진다.
 
+이번에는 반대로 **공통 IOC를 찾지 못한 것도 결과**라는 점을 알게 됐다. A와 B의 실제 사건에서 동일 C2를 찾지 못했다는 사실은 동일 행위자 결론을 약하게 만든다. 없는 근거를 비슷한 다른 캠페인의 IOC로 메우면 안 된다.
+
 ### 최초 보고서는 후대의 요약보다 신중했다
 
 Kaspersky와 Talos는 당시 확인할 수 있는 사실과 추정을 분리했다. 시간이 지나 여러 업체의 관측이 쌓이면서 현재의 그룹 분류가 형성됐다. 위협 인텔리전스는 한 번의 검색 결과가 아니라 새로운 증거로 계속 수정되는 분석 과정이었다.
@@ -215,6 +237,8 @@ Kaspersky와 Talos는 당시 확인할 수 있는 사실과 추정을 분리했�
 ## 9. 아직 답을 찾지 못한 점
 
 - Cisco Talos가 왜 `KONNI`라는 단어를 선택했는지는 최초 보고서에 설명되어 있지 않았다.
+- Huntress가 본 2021년 침해의 운영자가 Proofpoint 체계에서 TA427인지, BABYSHARK에 접근한 다른 하위 행위자인지는 확인하지 못했다.
+- 2023년 ASEC Konni 표본은 C2가 닫혀 있어 자료 A의 도메인·IP·인증서와 직접 비교하지 못했다.
 - 겹친 코드와 인프라가 동일 운영자 때문인지, 북한 내 공용 개발팀·도구 공급망·인프라 관리 조직 때문인지는 공개 자료만으로 구분하기 어렵다.
 - ESRC가 제시한 일부 연결은 원본 샘플과 전체 서버 로그가 공개되지 않아 모든 분석을 제3자가 독립적으로 재현하기 어렵다.
 - Konni를 Kimsuky가 아닌 APT37 쪽과 연결하는 분류의 차이를 해소하려면 같은 기간의 원본 샘플, 피해자 중복, 도메인 등록·접속 이력을 더 비교해야 한다.
@@ -223,7 +247,7 @@ Kaspersky와 Talos는 당시 확인할 수 있는 사실과 추정을 분리했�
 
 이번 조사에서 가장 큰 교훈은 **위협 행위자를 찾는 일이 이름 맞히기가 아니라는 것**이었다. 보고서가 사용한 명칭이 악성코드인지, 캠페인인지, 운영자 클러스터인지 먼저 구분해야 했다. 그 다음 코드, TTP, 피해자, 인프라와 시간 정보를 함께 비교하고, 증거마다 신뢰도를 다르게 매겨야 했다.
 
-Kimsuky와 Konni의 경우 공개 증거는 강한 운영 연계를 가리킨다. 하지만 위협 인텔리전스에서 “연결됐다”와 “완전히 동일하다”는 같은 말이 아니다. 확인된 사실과 분석자의 추정을 분리하고, 아직 설명하지 못한 부분을 남기는 것이 성급한 단정보다 좋은 결론이라고 생각한다.
+Kimsuky와 Konni를 연결하는 공개 자료는 분명 존재한다. 하지만 그 자료가 곧바로 이번 A와 B의 두 사건을 같은 팀으로 만들어 주지는 않았다. 확인된 사실, 벤더의 분류, 내 추정을 따로 적고 답을 찾지 못한 부분을 남기는 것이 이번 미션에서 얻은 가장 큰 교훈이었다.
 
 ### 참고 자료
 
@@ -234,5 +258,7 @@ Kimsuky와 Konni의 경우 공개 증거는 강한 운영 연계를 가리킨다
 - Palo Alto Networks Unit 42, [New BabyShark Malware Targets U.S. National Security Think Tanks](https://unit42.paloaltonetworks.com/new-babyshark-malware-targets-u-s-national-security-think-tanks/)
 - ESTsecurity ESRC, [APT 캠페인 'Konni' & 'Kimsuky' 조직의 공통점 발견](https://www.estsecurity.com/enterprise/security-center/notice/view/434)
 - ESTsecurity ESRC, [코니(Konni)조직을 탈륨(Thallium)으로 통합 분류](https://direct.estsecurity.com/public/security-center/notice/view/14394?category-id=6)
+- Proofpoint, [Triple Threat: North Korea-Aligned TA406 Scams, Spies, and Steals](https://www.proofpoint.com/au/blog/threat-insight/triple-threat-north-korea-aligned-ta406-scams-spies-and-steals)
+- Palo Alto Networks Unit 42, [The Fractured Statue Campaign](https://unit42.paloaltonetworks.com/the-fractured-statue-campaign-u-s-government-targeted-in-spear-phishing-attacks/)
 - MITRE ATT&CK, [Kimsuky (G0094)](https://attack.mitre.org/groups/G0094/)
 - MITRE ATT&CK, [KONNI (S0356)](https://attack.mitre.org/software/S0356/)
