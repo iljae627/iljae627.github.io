@@ -7,7 +7,7 @@ tags: [androgoat, android, kotlin, owasp, mastg, frida, adb, mitmproxy, api33, m
 
 ## 1. 들어가며
 
-이번 실습의 대상은 **의도적으로 취약하게 만든 교육용 앱** [AndroGoat](https://github.com/satishpatnayak/AndroGoat)이다. OWASP의 [MASTG Hacking Playground](https://github.com/OWASP/MASTG-Hacking-Playground)와 [MASTG Reference Apps](https://mas.owasp.org/MASTG/apps/)도 함께 참고했다. 아래 내용은 로컬 API 33 에뮬레이터와 해당 테스트 앱에만 적용했다.
+이번 실습의 대상은 **의도적으로 취약하게 만든 교육용 앱** [AndroGoat](https://github.com/satishpatnayak/AndroGoat)이다. OWASP의 [MASTG Hacking Playground](https://github.com/OWASP/MASTG-Hacking-Playground)와 [MASTG Reference Apps](https://mas.owasp.org/MASTG/apps/)도 함께 참고했다.
 
 최신 master를 직접 빌드해 보니 `compileSdkVersion 34`, `targetSdkVersion 33`, `minSdkVersion 19`였다. 즉 오래된 Android 취약점 예제를 최신 정책에서 실행했을 때 **그대로 터지는 것**, **플랫폼이 일부 막는 것**, **debug/root/Frida 때문에 다시 열리는 것**을 구분해 볼 수 있었다.
 
@@ -42,7 +42,7 @@ adb shell id
 # uid=0(root) ...
 ```
 
-여기서 중요한 전제는 두 가지다. `run-as`는 아무 앱에나 되는 우회가 아니라 **debuggable 빌드이기 때문에** 허용된다. `adb root`도 일반 상용 단말이 아니라 root 가능한 Google APIs 에뮬레이터 이미지에서만 가능하다.
+ `run-as`는 아무 앱에나 되는 우회가 아니라 **debuggable 빌드이기 때문에** 허용된다. `adb root`도 일반 상용 단말이 아니라 루팅 가능한 Google APIs 에뮬레이터 이미지에서만 가능하다.
 
 ## 3. 전 항목 결과 요약
 
@@ -101,7 +101,7 @@ adb shell run-as owasp.sat.agoat cat shared_prefs/users.xml
 </map>
 ```
 
-`MODE_PRIVATE`은 다른 일반 앱 UID의 직접 접근을 막아 주지만, 기기 root·debuggable `run-as`·백업·동일 프로세스 코드 실행을 상대로 암호화를 제공하지 않는다.
+`MODE_PRIVATE`은 다른 일반 앱 UID의 직접 접근을 막아 주지만, 기기 root·debuggable `run-as`·백업·동일 프로세스 코드 실행을 상대로 암호화를 제공하지 않았다.
 
 두 번째 SharedPreferences 예제는 점수를 `score.xml`에 정수로 저장한다. 10,001회를 누를 필요 없이 debug/root 환경에서는 `score=10000`으로 바꾼 뒤 한 번 눌러 승리 조건을 통과시킬 수 있다.
 
@@ -120,7 +120,7 @@ adb shell 'find /sdcard/Android/data/owasp.sat.agoat/files -type f -exec cat {} 
 # Username - sduser63 Password -sdpass63
 ```
 
-API 33의 scoped storage는 예전처럼 모든 앱이 `/sdcard` 전체를 읽는 상황을 줄였다. 그러나 앱 전용 external 디렉터리가 **암호화 저장소로 바뀐 것은 아니다**. root, 디버그 브리지, 백업·포렌식 획득 시 평문은 그대로다.
+API 33의 scoped storage는 모든 앱이 `/sdcard` 전체를 읽는 상황을 줄였다. 그러나 앱 전용 external 디렉터리가 **암호화 저장소로 바뀐 것은 아니다**. root, 디버그 브리지, 백업·포렌식 획득 시 평문은 그대로다.
 
 ## 5. SQL Injection과 WebView
 
@@ -142,7 +142,7 @@ E QueryResult: Username: (dbuser63) password: (dbpass63)
 E QueryResult: Username: (seconduser) password: (secondpass)
 ```
 
-서버가 없다고 SQL injection이 무해한 것은 아니다. 로컬 DB가 권한·라이선스·오프라인 인증 판단에 쓰이면 동일한 인증 우회가 된다. 수정은 문자열 연결이 아니라 selectionArgs/바인딩이다.
+서버가 없다고 SQL injection으로부터 안전한 것은 아니다. 로컬 DB가 권한·라이선스·오프라인 인증 판단에 쓰이면 인증 우회가 된다. 수정은 문자열 연결이 아니라 selectionArgs/바인딩이다.
 
 ### 5.2 WebView의 file 접근
 
@@ -161,15 +161,15 @@ webView.loadUrl(userInput)
 
 ![WebView 로컬 파일 로드](/assets/img/androgoat-api33/12-webview-xss.png)
 
-API 30부터 일부 file URL 관련 setter가 deprecated 되었지만, **deprecated는 자동 차단이 아니다**. 앱이 명시적으로 허용하고 사용자 입력을 `loadUrl`에 넘기면 API 33에서도 공격면이 남는다. `WebViewAssetLoader`, 엄격한 scheme/host allowlist, JavaScript 최소화가 필요하다.
+API 30부터 일부 파일 URL 관련 setter가 비권장 되었지만, **자동 차단이 아니다**. 앱이 명시적으로 허용하고 사용자 입력을 `loadUrl`에 넘기면 API 33에서도 공격면이 남는다. `WebViewAssetLoader`, scheme/host allowlist, JavaScript 최소화가 필요하다.
 
-`Runtime.exec("ping " + input)` 예제에는 `127.0.0.1;id`도 넣어 보았다. 그러나 Java `Runtime.exec(String)`은 셸을 자동으로 거치지 않으므로 세미콜론이 명령 구분자로 평가되지 않았다. 이 구현은 입력 검증이 나쁘지만, 이 페이로드로 곧바로 shell command injection이 된다고 쓰는 것은 과장이라고 생각한다.
+`Runtime.exec("ping " + input)` 예제에는 `127.0.0.1;id`도 넣어 보았다. 그러나 Java `Runtime.exec(String)`은 셸을 자동으로 거치지 않으므로 세미콜론이 명령 구분자로 평가되지 않았다. 이 구현은 입력 검증이 나쁘지만, 이 페이로드로 곧바로 shell command injection이 된다는 것은 아니라고 생각한다.
 
 ## 6. Unprotected Android Components
 
 ### 6.1 Content Provider
 
-권한 선언 없이 `exported=true`인 provider를 외부 shell UID에서 질의했다.
+권한 선언 없이 `exported=true`인 provider를 외부 shell UID에서 데이터를 요청했다.
 
 ```bash
 adb shell content query \
@@ -193,11 +193,11 @@ adb shell am broadcast -n owasp.sat.agoat/.ShowDataReceiver -a mission63.EXTERNA
 adb shell am startservice -n owasp.sat.agoat/.DownloadInvoiceService
 ```
 
-deep link는 PIN 검증 Activity를 거치지 않고 invoice 화면으로 진입했다. Receiver는 action allowlist나 권한 확인 없이 고정 credential을 Toast로 노출했다.
+deep link는 PIN 검증을 거치지 않고 invoice 화면으로 진입했다. Receiver는 action allowlist나 권한 확인 없이 고정 credential을 Toast로 노출했다.
 
 ![외부 broadcast로 Receiver 발화](/assets/img/androgoat-api33/07-exported-receiver.png)
 
-Service도 외부에서 실행됐고 logcat은 아래 순서를 남겼다.
+서비스도 외부에서 실행됐고 로그는 다음과 같다.
 
 ```text
 I DOWNLOAD: Service onCreate
@@ -205,7 +205,7 @@ I DOWNLOAD: Invoice is being downloaded
 I DOWNLOAD: Service onDestroy
 ```
 
-API 33의 background execution 제한이 모든 exported service 호출을 인증해 주는 것은 아니다. 테스트 시점에는 shell/root 컨텍스트와 foreground 상태 때문에 실행됐으며, 일반 백그라운드 앱의 호출 조건은 더 제한될 수 있다.
+API 33의 background execution 제한이 모든 exported service 호출을 인증해 주는 것은 아니다. 테스트 시점에는 shell/root 컨텍스트와 foreground 상태 때문에 실행됐으며, 일반 백그라운드 앱의 호출 조건은 더 제한될 수 있다고 생각한다.
 
 ## 7. Side Channel과 하드코딩 시크릿
 
@@ -218,7 +218,7 @@ I System.out: Username: loguser63 and Password: LogPass63 are verified
 
 ![로그인 값이 logcat으로 출력된 화면](/assets/img/androgoat-api33/08-insecure-log.png)
 
-Android 4.1 이후 일반 앱이 다른 앱의 전체 logcat을 읽기는 어려워졌지만, adb 권한·root·개발 빌드·크래시 수집 시스템에서는 여전히 회수된다. 비밀번호·토큰은 로그에 남기지 않는 것이 답이다.
+Android 4.1 이후 일반 앱이 다른 앱의 전체 로그를 읽기는 어려워졌지만, adb 권한·root·개발 빌드·크래시 수집 시스템에서는 여전히 회수된다. 비밀번호·토큰은 로그에 남기지 않는 것이 답이다.
 
 ### 7.2 Clipboard와 Keyboard Cache
 
@@ -226,9 +226,9 @@ Android 4.1 이후 일반 앱이 다른 앱의 전체 logcat을 읽기는 어려
 
 ![클립보드에 복사된 OTP](/assets/img/androgoat-api33/09-clipboard-otp.png)
 
-API 33은 백그라운드 앱의 clipboard 읽기를 제한하고 접근 알림도 제공한다. 그래서 과거 버전과 같은 무제한 수집 PoC는 그대로 재현되지 않았다. 다만 foreground 악성 키보드, 접근성 서비스, 사용자의 오붙여넣기까지 막는 것은 아니므로 OTP·비밀번호를 전역 clipboard에 넣지 않는 편이 안전하다.
+API 33은 백그라운드 앱의 클립보드 읽기를 제한하고 접근 알림도 제공한다. 그래서 과거 버전과 같은 무제한 수집 PoC는 그대로 재현되지 않았다. 다만 foreground 악성 키보드, 접근성 서비스, 사용자의 실수로 다른 곳에 붙여넣는 것까지 막는 것은 아니므로 OTP·비밀번호를 전역 클립보드에 넣지 않는 편이 안전하다.
 
-Keyboard Cache 항목도 유사하다. 최신 Gboard 데이터는 키보드 앱의 별도 UID 샌드박스에 있으므로 AndroGoat 권한만으로 사전 DB를 꺼낼 수 없었다. 민감 필드는 `textPassword`, `importantForAutofill`, 학습 방지 옵션을 적절히 사용해야 한다.
+키보드 캐시 항목도 유사하다. 최신 Gboard 데이터는 키보드 앱의 별도 UID 샌드박스에 있으므로 AndroGoat 권한만으로 사전 DB를 꺼낼 수 없었다. 민감 필드는 `textPassword`, `importantForAutofill`, 학습 방지 옵션을 적절히 사용해야 한다.
 
 ### 7.3 Shopping/Cloud secret
 
@@ -236,7 +236,7 @@ APK 문자열에서 `NEW2019`를 찾은 뒤 입력하자 가격이 0으로 바�
 
 ![하드코딩 프로모코드 사용](/assets/img/androgoat-api33/10-hardcode-promo.png)
 
-Cloud Activity에는 AWS 형식 access key와 secret이 모두 들어 있었고 버튼을 누르자 화면/logcat에 그대로 노출됐다.
+Cloud Activity에는 AWS 형식 access key와 secret이 모두 들어 있었고 버튼을 누르자 화면/로그에 그대로 노출됐다.
 
 ![하드코딩 Cloud key 노출](/assets/img/androgoat-api33/11-hardcode-cloud.png)
 
@@ -245,7 +245,7 @@ D [Info]: Connected to AWS account using Access key AKIAX56...ABC
           and secret key OviCws...OABCw
 ```
 
-이 값들은 교육용 샘플로만 취급했다. 실제 앱이라면 키를 폐기·회전하고, 클라이언트에 장기 cloud credential을 두지 말아야 한다.
+만약 실제 앱이라면 키를 폐기하고, 클라이언트에 장기 cloud credential을 두지 말아야 한다.
 
 ## 8. Root·Emulator Detection 우회
 
@@ -286,7 +286,7 @@ Java.perform(function () {
 
 ### 9.1 프록시 연결
 
-호스트 mitmproxy 8081을 에뮬레이터의 8080으로 reverse했다.
+호스트 mitmproxy 8081을 에뮬레이터의 8080으로 설정했다.
 
 ```bash
 mitmdump --listen-host 127.0.0.1 --listen-port 8081
@@ -345,7 +345,7 @@ V Response: <!DOCTYPE html> ... <title>OWASP Foundation ...</title>
 
 ![Frida SSL pinning 우회 실행 화면](/assets/img/androgoat-api33/15-frida-tls-bypass.png)
 
-Native/network-security-config pinning은 OkHttp 후킹과 다른 층이다. 그렇기에 `cve.org`에 선언된 XML pin-set은 이 스크립트 하나로 일반화해 우회했다고 주장할 수 없다. 실제 평가에서는 Conscrypt/TrustManager 또는 해당 네트워크 스택을 별도로 관찰해야 한다.
+Native/network-security-config pinning은 OkHttp 후킹과 다른 층이다. 그렇기에 `cve.org`에 선언된 XML pin-set은 이 스크립트 하나로 일반화해 우회했다고 주장할 수 없다.
 
 ## 10. Biometric Authentication
 
@@ -355,11 +355,11 @@ API 33 에뮬레이터에 생체 정보가 등록되지 않은 기본 상태에�
 The user hasn't associated any biometric credentials.
 ```
 
-그 뒤 Frida로 `BioMetricAuthActivity` 인스턴스를 찾아 성공 UI 경로를 강제로 호출했다.
+그 후 Frida로 `BioMetricAuthActivity` 인스턴스를 찾아 성공 UI 경로를 강제로 호출했다.
 
 ![Frida 생체 인증 성공 경로 강제](/assets/img/androgoat-api33/16-biometric-frida.png)
 
-이 우회가 가능한 핵심 이유는 성공 후 보호되는 비밀이 `BiometricPrompt.CryptoObject`의 암호 연산 결과에 묶여 있지 않고, 단순 callback/UI 상태에만 의존하기 때문이다. 다만 이번 PoC는 **UI 권한 분기 우회**이지 실제 지문 template이나 Android Keystore 키를 복제한 것이 아니다.
+이 우회가 가능한 이유는 성공 후 `BiometricPrompt.CryptoObject`의 암호 연산 결과에 묶여 있지 않고, 단순 callback/UI 상태에만 의존하기 때문이다. 하지만 이번 PoC는 **UI 권한 분기 우회**이지 실제 지문 template이나 Android Keystore 키를 복제한 것이 아니다.
 
 ## 11. 기타: MD5, Binary Patching, Backup, Firebase
 
@@ -370,7 +370,7 @@ MessageDigest.getInstance("MD5")
     .digest(pinValue.toByteArray())
 ```
 
-빠른 일반 해시는 비밀번호/PIN 저장용 KDF가 아니다. 서버라면 Argon2id/scrypt/bcrypt/PBKDF2와 고유 salt를 사용해야 하고, 단말 로컬 인증이라면 Keystore와 사용자 인증 결합을 우선 고려해야 한다.
+빠른 일반 해시는 비밀번호/PIN 저장용 KDF가 아니다. 서버라면 Argon2id/scrypt/bcrypt/PBKDF2와 고유 salt를 사용해야 하고, 단말 로컬 인증이라면 Keystore와 사용자 인증 결합을 고려해야 한다.
 
 Binary Patching Activity의 권한은 `private val isAdmin: Boolean = false` 한 분기에 의존한다. 이런 클라이언트 boolean은 smali 패치나 런타임 후킹으로 뒤집을 수 있으므로 서버 권한 검증을 대신할 수 없다.
 
@@ -389,7 +389,7 @@ API 33은 많은 것을 개선했다. scoped storage, clipboard background 제�
 5. CryptoObject에 결합되지 않은 생체 인증 성공 분기
 6. user CA 신뢰·cleartext 허용·고정 pin을 섞은 네트워크 설정
 
-**Android 정책은 취약한 애플리케이션 로직을 대신 고쳐 주지 않는다.** 반대로 `adb root`, `run-as`, 시스템 CA 주입처럼 이번 실습에서 강한 권한을 사용한 결과를 일반 상용 단말의 기본 공격 가능성과 혼동해서도 안 된다.
+실습을 하며 느낀 점이라 하면, **Android 정책은 취약한 애플리케이션 로직을 대신 고쳐 주지 않는다.**라는 점이다. 반대로 `adb root`, `run-as`, 시스템 CA 주입처럼 이번 실습에서 강한 권한을 사용한 결과를 일반 상용 단말의 기본 공격 가능성과 혼동해서도 안 된다고 생각한다.
 
 ### 참고 자료
 
