@@ -5,14 +5,14 @@ categories: [개발, Python]
 tags: [python, debugger, sys-settrace, frame, tracing, debugging-book, mission61]
 ---
 
-## 1. 미션을 시작하며
+## 1. 시작하며
 
-평소 디버거의 `step`, `next`, 중단점을 당연하게 사용했지만, 프로그램이 **지금 어느 줄을 실행하는지 어떻게 아는가**는 깊게 생각하지 않았다. 이번에는 The Debugging Book의 *Introduction to Debugging*, *Tracing Executions*, *How Debuggers Work*를 읽고 Python 표준 라이브러리만으로 작은 대화형 디버거를 만들었다.
+`print()`를 여러 군데 넣는 대신 실행 중인 줄에서 변수 값을 보고 싶었다. 이를 위해 [The Debugging Book](https://www.debuggingbook.org/)의 *Introduction to Debugging*, *Tracing Executions*, *How Debuggers Work*를 참고해 Python 표준 라이브러리만 쓰는 대화형 디버거를 만들었다.
 
-과제의 기준은 *How Debuggers Work* Exercise 2까지다. 따라서 줄 중단점뿐 아니라 함수명 중단점, `next`, 호출 스택, `up/down`, `until`, `finish`, 감시점을 모두 구현했다. 여기에 실제 사용 중 지난 정지 위치를 잊기 쉬웠던 점을 보완하려고 `history`, 예외를 바로 잡기 위한 `exceptions`를 추가했다.
+목표는 *How Debuggers Work*의 Exercise 2다. 책에 나온 기본 명령에 함수명 중단점, `next`, `where`, `up/down`, `until`, `finish`, `watch`를 붙였다. 추가 명령으로는 정지 지점을 다시 보는 `history`와 예외 이벤트에서 멈추는 `exceptions`를 골랐다.
 
-![VS Code에서 디버거 핵심 코드를 구현한 화면](/assets/img/python-debugger/01-source-code.png)
-_`sys.settrace()`가 전달한 frame과 event를 정지 조건으로 연결하는 부분._
+![VS Code에서 연 my_debugger.py의 trace 함수](/assets/img/python-debugger/01-vscode-trace.png)
+_VS Code에서 `my_debugger.py`를 열어 본 화면. `_trace()`가 이벤트를 받아 정지 조건으로 넘긴다._
 
 완성 파일은 아래에서 바로 받을 수 있다.
 
@@ -20,25 +20,19 @@ _`sys.settrace()`가 전달한 frame과 event를 정지 조건으로 연결하�
 - [test_debugger.py](/assets/files/python-debugger/test_debugger.py)
 - [사용 매뉴얼](/assets/files/python-debugger/MANUAL.md)
 
-## 2. 먼저 이해한 디버깅 방식
+## 2. `sys.settrace()`부터 확인
 
-Introduction 챕터에서 가장 기억에 남은 것은 디버깅을 무작정 코드 수정으로 시작하지 않는다는 점이다. 실패를 재현하고, 관찰 가능한 사실과 가설을 분리하며, 한 번의 실험으로 가설 하나를 좁힌다. `print()`도 관찰 도구지만 보고 싶은 지점을 미리 코드에 넣어야 한다. 디버거는 실행을 잠시 멈춘 뒤 그 순간에 필요한 상태를 골라 볼 수 있다.
+Introduction 챕터의 예제는 실패를 재현한 다음 가설을 하나씩 검증한다. 이 과정에서 보고 싶은 변수는 실행하다가 달라진다. 그래서 코드에 출력문을 미리 심는 방식만으로는 번거롭다.
 
-Tracing 챕터의 핵심은 Python이 trace 함수를 호출해 준다는 사실이었다.
+Tracing 챕터에서 찾은 출발점은 `sys.settrace()`였다.
 
 ```python
 sys.settrace(trace_function)
 ```
 
-trace 함수는 대략 다음 정보를 받는다.
+등록한 함수는 `frame`, `event`, `arg`를 받는다. `event`는 `call`, `line`, `return`, `exception` 등이고, `arg`에는 반환값이나 예외 정보가 실린다. `frame`에는 현재 줄 번호와 지역 변수, 호출자 프레임이 있다.
 
-| 값 | 의미 |
-|---|---|
-| `frame` | 실행 중인 프레임. 코드·현재 줄·지역/전역 변수·호출자 참조를 가짐 |
-| `event` | `call`, `line`, `return`, `exception` 등 실행 사건 |
-| `arg` | 반환값이나 예외 튜플처럼 이벤트에 딸린 값 |
-
-흐름을 단순화하면 다음과 같다.
+만든 디버거의 실행 흐름은 이렇다.
 
 ```text
 대상 코드 실행
@@ -52,20 +46,20 @@ CPython이 trace(frame, event, arg) 호출
 현재 소스/변수 표시 → 명령 입력 → 실행 모드 변경
 ```
 
-중단점은 프로그램을 특별한 방식으로 정지시키는 마법이 아니었다. 매 trace 이벤트마다 `frame.f_lineno`가 중단점 집합에 있는지 검사해 참일 때 입력 루프로 들어가는 구조였다.
+줄 중단점은 `frame.f_lineno`와 저장해 둔 파일·줄 번호를 비교한다. 같으면 `(pydbg)` 입력 루프로 들어간다. 별도의 기계어 패치를 하지 않아도 Python 수준에서 실행 위치를 관찰할 수 있었다.
 
 ## 3. 구현 전에 정한 추가 명령
 
-미션 지시에 따라 코드를 붙이기 전에 추가 기능의 인터페이스부터 정했다.
+Exercise 2 외에 넣을 기능은 구현 전에 명령어와 동작부터 정했다.
 
 | 명령 | 사용법 | 미리 정한 동작 |
 |---|---|---|
 | `history` | `history [COUNT]` | 최근 정지한 이벤트·함수·파일·줄을 기본 10개 출력 |
 | `exceptions` | `exceptions on\|off` | `exception` 이벤트를 만났을 때 즉시 멈출지 전환 |
 
-`history`는 실행을 바꾸지 않는 관찰 명령이고, `exceptions`는 정지 조건 하나를 켜고 끄는 명령이다. 기존 구조에 억지로 예외 처리를 섞지 않고 각각 `deque`와 불리언 상태로 표현할 수 있어 작은 디버거에 잘 맞았다.
+`history`는 최근 정지 기록을 `deque(maxlen=30)`에 보관한다. `exceptions`는 불리언 값을 켜고 끄므로 기존 정지 조건에 한 줄을 추가할 수 있었다.
 
-## 4. 디버거의 기본 뼈대
+## 4. 추적을 시작하고 끝내기
 
 컨텍스트 매니저로 추적의 시작과 끝을 묶었다.
 
@@ -84,7 +78,7 @@ def __exit__(self, exc_type, exc, tb):
 
 `__exit__()`이 `False`를 반환하므로 대상 프로그램의 예외를 디버거가 삼키지 않는다. 추적 중 예외를 관찰할 수는 있어도 원래 실행 의미는 바꾸지 않기 위해서다.
 
-trace 함수 안에서는 첫 사용자 호출을 root frame으로 잡고 그 아래 호출만 추적했다. 디버거 명령 자체까지 추적하면 `print` 명령을 처리하는 코드가 다시 디버거를 호출하는 재귀가 생긴다. 그래서 `Debugger` 메서드의 코드 객체를 미리 모아 내부 프레임을 제외했다.
+처음에는 디버거 자신의 메서드까지 trace 대상이 되어 출력·명령 처리 흐름을 따라가게 되는 문제가 있었다. `Debugger` 메서드의 코드 객체를 모아 내부 프레임을 제외하고, 첫 대상 호출을 root frame으로 잡아 그 아래 호출만 관찰했다.
 
 ```python
 if frame.f_code in self._internal_codes:
@@ -94,7 +88,7 @@ if not self._is_descendant(frame, self._root_frame):
     return self._trace
 ```
 
-## 5. `frame`에서 알 수 있는 것
+## 5. `frame`에서 변수와 호출자 읽기
 
 이번 구현에서 사용한 frame 속성은 다음과 같다.
 
@@ -111,10 +105,12 @@ if not self._is_descendant(frame, self._root_frame):
 value = eval(expression, frame.f_globals, frame.f_locals)
 ```
 
-편리하지만 보안 경계는 아니다. 입력한 Python 식이 실행될 수 있으므로 본인이 제어하는 로컬 디버깅 세션에서만 사용해야 한다.
+이 방식은 편하지만 `eval()`은 단순 조회 전용이 아니다. `print`나 `watch`에 입력한 식이 코드를 실행할 수도 있으므로 신뢰할 수 있는 로컬 세션에서만 사용해야 한다.
 
-![변수 출력과 감시점을 사용한 실제 실행 기록](/assets/img/python-debugger/02-watch-session.png)
-_`total`이 0에서 12000으로 바뀌는 순간 감시점이 실행을 멈췄다._
+변수 값이 바뀌는 지점은 `watch total`로 확인했다. 실행 기록에서는 `total`이 `0 → 12000 → 20000 → 25000`으로 변했다. 아래 사진은 그 기록을 합성한 콘솔 화면이 아니라, 실제 VS Code에서 연 감시점 구현 코드다.
+
+![VS Code에서 연 감시점 구현 코드](/assets/img/python-debugger/02-vscode-watch-code.png)
+_값을 다시 평가해 이전 값과 비교하는 `_watch_changed()`._
 
 ## 6. step과 next는 무엇이 다른가
 
@@ -129,7 +125,7 @@ self._mode = "next"
 
 그 아래 함수의 이벤트는 계속 전달되지만 정지 조건은 `frame is self._next_frame`인 `line` 또는 `return`만 통과한다. 즉 호출된 함수를 실제로 생략하는 것이 아니라 **실행하되 그 내부에서 멈추지 않는 것**이다.
 
-`finish`도 같은 생각이다. 현재 frame의 `return` 이벤트까지 기다린다. `until`은 같은 frame에서 줄 번호가 목표보다 커졌는지를 검사한다. 이런 명령은 모두 실행을 조종하는 별도 API가 아니라 trace 이벤트를 무시하다가 원하는 조건에서 다시 상호작용하는 방식이었다.
+`finish`는 현재 frame의 `return` 이벤트까지 기다린다. `until`은 같은 frame에서 목표보다 큰 줄 번호가 나올 때 멈춘다. 세 명령은 코드를 건너뛰는 게 아니라, 실행 중 들어오는 trace 이벤트 중 어느 것에서 다시 입력 루프를 열지 정하는 방식이다.
 
 ## 7. 함수명 중단점과 호출 스택
 
@@ -150,15 +146,15 @@ if event == "call" and frame.f_code.co_name in self.function_breakpoints:
 
 ```python
 new_value = eval(expression, frame.f_globals, frame.f_locals)
-if old_value is not MISSING and new_value != old_value:
+if old_value is not _MISSING and new_value != old_value:
     changes.append((expression, old_value, new_value))
 ```
 
-변수가 아직 만들어지지 않은 시점은 `_MISSING` sentinel로 구분했다. `None`은 정상적인 변수 값일 수 있어서 “없음” 표시로 사용할 수 없다. 이것은 Python에서 고유한 `object()`를 sentinel로 쓰는 전형적인 패턴이다.
+변수가 아직 만들어지지 않은 시점은 `_MISSING = object()`로 구분했다. `None`도 정상적인 변수 값이어서 “아직 값 없음”의 대용으로 쓸 수 없었다.
 
 다만 리스트 자체를 제자리 수정하면 이전 값과 현재 값이 같은 객체일 수 있다. 그 경우 `watch len(items)`나 `watch tuple(items)`처럼 관찰할 상태를 값으로 만드는 편이 안전하다. 교육용 구현의 범위와 한계도 매뉴얼에 기록했다.
 
-## 9. 명령 디스패치와 Python 문법
+## 9. 명령 추가 방식
 
 명령은 `do_명령어` 메서드 이름으로 연결했다.
 
@@ -168,7 +164,7 @@ if method is not None:
     method(argument)
 ```
 
-여기서 배운 문법과 기법은 다음과 같다.
+구현에 직접 쓰인 Python 문법·라이브러리는 다음과 같다.
 
 - 컨텍스트 매니저 `__enter__`, `__exit__`
 - 타입 힌트의 `FrameType`, `TracebackType`, `Callable`
@@ -179,7 +175,10 @@ if method is not None:
 - `shlex.split()`로 따옴표가 있는 명령 인자 처리
 - `linecache.getline()`으로 실행 중인 소스 한 줄 읽기
 
-`help`도 별도 표를 하드코딩하지 않고 `do_`로 시작하는 메서드와 docstring에서 생성한다. 새 명령을 추가하면 도움말 목록에 자동으로 나타난다.
+`help` 목록은 `do_` 메서드의 docstring에서 만든다. `history`와 `exceptions`를 추가할 때 도움말 표를 따로 고칠 필요가 없었다.
+
+![VS Code에서 연 history와 exceptions 명령 구현](/assets/img/python-debugger/03-vscode-extra-commands.png)
+_추가 명령의 구현. 최근 기록 출력과 예외 정지 설정을 각각 독립된 메서드로 넣었다._
 
 ## 10. 실제 사용
 
@@ -205,8 +204,7 @@ total = 12000
 (pydbg) history
 ```
 
-![추가 기능 history로 정지 이력을 확인한 화면](/assets/img/python-debugger/03-history.png)
-_call부터 line 이벤트까지 최근 정지 위치가 순서대로 남는다._
+`history`를 입력하면 직전의 `call`과 `line` 정지 위치를 시간순으로 볼 수 있다. 화면 재현 이미지를 붙이는 대신 사용한 명령과 실제 출력 형식을 위에 적었다.
 
 모든 명령과 주의점은 별도의 [사용 매뉴얼](/assets/files/python-debugger/MANUAL.md)에 정리했다.
 
@@ -218,14 +216,21 @@ _call부터 line 이벤트까지 최근 정지 위치가 순서대로 남는다.
 python -m unittest -v test_debugger.py
 ```
 
-![회귀 테스트 5개가 통과한 화면](/assets/img/python-debugger/04-tests.png)
-_기본 결과, step/print/where, 함수 중단점, 감시점, history를 자동 검증했다._
+![VS Code에서 연 디버거 회귀 테스트 코드](/assets/img/python-debugger/04-vscode-tests-code.png)
+_`ScriptedInput`으로 명령을 넣고 `StringIO`의 출력에서 함수 중단점·감시점·이력을 검사했다._
 
-테스트 결과는 5개 모두 통과했다. 별도로 `py_compile`도 실행해 두 파일의 문법 검사를 마쳤다.
+실행 결과는 5개 모두 통과했다.
+
+```text
+Ran 5 tests in 0.004s
+OK
+```
+
+별도로 `python -m py_compile my_debugger.py test_debugger.py`도 통과했다. 사진은 테스트 **결과 화면**이 아니라 테스트 **코드 화면**이고, 결과는 위 명령 출력에서 옮겼다.
 
 ## 12. 한계와 개선 방향
 
-직접 만들어 보니 IDE 디버거가 해결한 범위가 훨씬 넓다는 것도 보였다.
+IDE 디버거와 비교하면 빠진 부분도 있다.
 
 1. `sys.settrace()`는 현재 스레드에 설정되므로 새 스레드는 별도 처리가 필요하다.
 2. 비동기 태스크는 같은 스레드에서 frame이 교차해 사용자 경험을 더 설계해야 한다.
@@ -233,13 +238,13 @@ _기본 결과, step/print/where, 함수 중단점, 감시점, history를 자동
 4. 모든 line 이벤트에서 watch 식을 평가하므로 무겁거나 부작용 있는 표현식은 피해야 한다.
 5. 같은 이름의 함수가 여러 모듈에 있으면 함수명 중단점이 모두 반응한다. `module.function` 형식으로 확장할 수 있다.
 
-이번 범위에서는 동작을 숨기기보다 이 한계를 매뉴얼에 적는 쪽을 택했다.
+이 한계는 [매뉴얼](/assets/files/python-debugger/MANUAL.md)에도 적었다.
 
 ## 13. 마무리
 
-디버거의 핵심은 “실행을 멈춘다”보다 **실행 이벤트를 계속 관찰하다가 조건에 맞는 이벤트에서 사용자에게 제어를 돌려준다**는 데 있었다. `step`, `next`, `finish`, 중단점, 감시점은 겉으로 서로 다른 기능이지만 결국 frame·event·상태를 조합한 정지 조건이었다.
+가장 오래 들여다본 부분은 `step`과 `next`의 차이였다. 처음에는 `next`가 호출 함수를 실행하지 않는 것처럼 생각했지만, 실제로는 내부 이벤트를 지나치고 원래 frame의 다음 줄에서 다시 멈추는 것이었다. 줄 중단점, 감시점, `finish`도 같은 trace 이벤트 위에서 정지 조건만 달리한 기능이다.
 
-작은 구현이지만 Exercise 2의 모든 명령을 실제로 연결하고, 추가 명령을 먼저 문서화한 뒤 구현하고, 자동 테스트와 매뉴얼까지 작성했다. 앞으로 디버거에서 한 줄을 넘길 때 그 뒤에서 어떤 frame과 event가 오가는지 훨씬 구체적으로 떠올릴 수 있을 것 같다.
+Exercise 2 명령과 추가 명령을 구현하고 테스트까지 마쳤다. 다중 스레드와 `eval()`의 부작용은 남아 있으므로 범용 디버거라기보다 Python 실행 모델을 확인하기 위한 작은 도구로 보는 게 정확하다.
 
 ### 참고 자료
 
