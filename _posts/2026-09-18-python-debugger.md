@@ -1,5 +1,5 @@
 ---
-title: "[Mission #61] sys.settrace로 나만의 Python 디버거 만들기"
+title: "나만의 Python 디버거 만들기"
 date: 2026-09-18 00:20:00 +0900
 categories: [개발, Python]
 tags: [python, debugger, sys-settrace, frame, tracing, debugging-book, mission61]
@@ -7,7 +7,7 @@ tags: [python, debugger, sys-settrace, frame, tracing, debugging-book, mission61
 
 ## 1. 시작하며
 
-`print()`를 여러 군데 넣는 대신 실행 중인 줄에서 변수 값을 보고 싶었다. 이를 위해 [The Debugging Book](https://www.debuggingbook.org/)의 *Introduction to Debugging*, *Tracing Executions*, *How Debuggers Work*를 참고해 Python 표준 라이브러리만 쓰는 대화형 디버거를 만들었다.
+[The Debugging Book](https://www.debuggingbook.org/)의 *Introduction to Debugging*, *Tracing Executions*, *How Debuggers Work*를 참고해 Python 표준 라이브러리만 쓰는 디버거를 만들었다.
 
 목표는 *How Debuggers Work*의 Exercise 2다. 책에 나온 기본 명령에 함수명 중단점, `next`, `where`, `up/down`, `until`, `finish`, `watch`를 붙였다. 추가 명령으로는 정지 지점을 다시 보는 `history`와 예외 이벤트에서 멈추는 `exceptions`를 골랐다.
 
@@ -76,7 +76,7 @@ def __exit__(self, exc_type, exc, tb):
     return False
 ```
 
-`__exit__()`이 `False`를 반환하므로 대상 프로그램의 예외를 디버거가 삼키지 않는다. 추적 중 예외를 관찰할 수는 있어도 원래 실행 의미는 바꾸지 않기 위해서다.
+`__exit__()`이 `False`를 반환하므로 대상 프로그램의 예외를 디버거가 다루지 않는다. 추적 중 예외를 관찰할 수는 있어도 원래 실행 의미는 바꾸지 않기 위해서다.
 
 처음에는 디버거 자신의 메서드까지 trace 대상이 되어 출력·명령 처리 흐름을 따라가게 되는 문제가 있었다. `Debugger` 메서드의 코드 객체를 모아 내부 프레임을 제외하고, 첫 대상 호출을 root frame으로 잡아 그 아래 호출만 관찰했다.
 
@@ -105,7 +105,7 @@ if not self._is_descendant(frame, self._root_frame):
 value = eval(expression, frame.f_globals, frame.f_locals)
 ```
 
-이 방식은 편하지만 `eval()`은 단순 조회 전용이 아니다. `print`나 `watch`에 입력한 식이 코드를 실행할 수도 있으므로 신뢰할 수 있는 로컬 세션에서만 사용해야 한다.
+이 방식이 편하지만 `eval()`은 단순 조회 전용이 아니라 `print`나 `watch`에 입력한 식이 코드를 실행할 수도 있으므로 신뢰할 수 있는 로컬 세션에서만 사용해야 한다.
 
 변수 값이 바뀌는 지점은 `watch total`로 확인했다. 실행 기록에서는 `total`이 `0 → 12000 → 20000 → 25000`으로 변했다. 아래 사진은 그 기록을 합성한 콘솔 화면이 아니라, 실제 VS Code에서 연 감시점 구현 코드다.
 
@@ -138,7 +138,7 @@ if event == "call" and frame.f_code.co_name in self.function_breakpoints:
     return True
 ```
 
-`where`는 현재 frame부터 `f_back`을 따라 root frame까지 올라간다. 가장 안쪽을 `#0`으로 보여 주고, `up/down`은 이 목록에서 선택한 인덱스만 바꾼다. 선택 프레임에서는 호출자의 지역 변수를 볼 수 있지만 `next`, `finish` 같은 실행 제어는 실제 정지 프레임을 기준으로 했다. 관찰 위치와 실행 위치를 섞으면 엉뚱한 함수의 반환을 기다리는 버그가 생기기 때문이다.
+`where`는 현재 frame부터 `f_back`을 따라 root frame까지 올라간다. 가장 안쪽을 `#0`으로 보여 주고, `up/down`은 이 목록에서 선택한 인덱스만 바꾼다. 선택 프레임에서는 호출자의 지역 변수를 볼 수 있지만 `next`, `finish` 같은 실행 제어는 실제 정지 프레임을 기준으로 했다. 관찰 위치와 실행 위치를 섞으면 다른 함수의 반환을 기다리는 버그가 생기기 때문이다.
 
 ## 8. watchpoint 구현
 
@@ -152,7 +152,7 @@ if old_value is not _MISSING and new_value != old_value:
 
 변수가 아직 만들어지지 않은 시점은 `_MISSING = object()`로 구분했다. `None`도 정상적인 변수 값이어서 “아직 값 없음”의 대용으로 쓸 수 없었다.
 
-다만 리스트 자체를 제자리 수정하면 이전 값과 현재 값이 같은 객체일 수 있다. 그 경우 `watch len(items)`나 `watch tuple(items)`처럼 관찰할 상태를 값으로 만드는 편이 안전하다. 교육용 구현의 범위와 한계도 매뉴얼에 기록했다.
+다만 리스트 자체를 제자리 수정하면 이전 값과 현재 값이 같은 객체일 수 있다. 그 경우 `watch len(items)`나 `watch tuple(items)`처럼 관찰할 상태를 값으로 만드는 편이 안전하다.
 
 ## 9. 명령 추가 방식
 
@@ -226,7 +226,7 @@ Ran 5 tests in 0.004s
 OK
 ```
 
-별도로 `python -m py_compile my_debugger.py test_debugger.py`도 통과했다. 사진은 테스트 **결과 화면**이 아니라 테스트 **코드 화면**이고, 결과는 위 명령 출력에서 옮겼다.
+별도로 `python -m py_compile my_debugger.py test_debugger.py`도 통과했다.
 
 ## 12. 한계와 개선 방향
 
@@ -242,9 +242,9 @@ IDE 디버거와 비교하면 빠진 부분도 있다.
 
 ## 13. 마무리
 
-가장 오래 들여다본 부분은 `step`과 `next`의 차이였다. 처음에는 `next`가 호출 함수를 실행하지 않는 것처럼 생각했지만, 실제로는 내부 이벤트를 지나치고 원래 frame의 다음 줄에서 다시 멈추는 것이었다. 줄 중단점, 감시점, `finish`도 같은 trace 이벤트 위에서 정지 조건만 달리한 기능이다.
+가장 오래동안 생각한 부분은 `step`과 `next`의 차이였다. 처음에는 `next`가 호출 함수를 실행하지 않는 것처럼 생각했지만, 실제로는 내부 이벤트를 지나치고 원래 frame의 다음 줄에서 다시 멈추는 것이었다. 줄 중단점, 감시점, `finish`도 같은 trace 이벤트 위에서 정지 조건만 달리한 기능이다.
 
-Exercise 2 명령과 추가 명령을 구현하고 테스트까지 마쳤다. 다중 스레드와 `eval()`의 부작용은 남아 있으므로 범용 디버거라기보다 Python 실행 모델을 확인하기 위한 작은 도구로 보는 게 정확하다.
+Exercise 2 명령과 추가 명령을 구현하고 테스트까지 마쳤다. 다중 스레드와 `eval()`의 부작용은 남아 있으므로 범용 디버거라기보다 Python 실행 모델을 확인하기 위한 툴이라고 보는게 맞는듯하다.
 
 ### 참고 자료
 

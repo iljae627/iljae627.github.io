@@ -1,6 +1,6 @@
 # 나만의 Python 디버거 사용 매뉴얼
 
-Mission #61의 결과물인 `my_debugger.py`는 Python 표준 라이브러리만 사용하는 교육용 라인 디버거다. Python 3.10 이상을 권장한다.
+`my_debugger.py`는 Python 표준 라이브러리만 사용하는 교육용 라인 디버거다. Python 3.10 이상을 권장한다.
 
 ## 1. 시작하기
 
@@ -112,5 +112,3 @@ python -m unittest -v test_debugger.py
 - `test_debugger.py`: 자동 회귀 테스트
 - `MANUAL.md`: 이 문서
 - `LICENSE`: MIT 라이선스 전문
-
-라이선스는 학습·개인 프로젝트 용도로 자유롭게 수정할 수 있도록 MIT 방식으로 제공한다.
