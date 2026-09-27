@@ -300,6 +300,3 @@ _취약 버전은 heap-buffer-overflow, 수정 버전은 경계에서 파싱을 
 - [libexif 공식 저장소](https://github.com/libexif/libexif)
 - [TCPdump CVE-2017-13028 공식 수정 커밋](https://github.com/the-tcpdump-group/tcpdump/commit/85078eeaf4bf8fcdc14a4e79b516f92b6ab520fc)
 - [CVE-2012-2836](https://www.cve.org/CVERecord?id=CVE-2012-2836)
-- [참고한 동일 미션 수행 글 — MONKEY PATCH](https://wtcyj.github.io/posts/fuzzing101-writeup-v2/)
-- [참고한 동일 미션 수행 글 — Security Potato Exercise 1](https://mossvana.github.io/dev/fuzzing101-1/)
-- [참고한 동일 미션 수행 글 — Karsel's Blog](https://karsel83.github.io/posts/fuzz2/)
