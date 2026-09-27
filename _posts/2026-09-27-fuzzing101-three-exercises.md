@@ -8,6 +8,7 @@ tags: [fuzzing, aflplusplus, asan, gdb, xpdf, libexif, tcpdump, cve, mission23]
 ## 1. 시작하며
 
 [Fuzzing101](https://github.com/antonio-morales/Fuzzing101)의 앞 세 문제를 WSL에서 풀었다. 파일 파서인 Xpdf, 라이브러리인 libexif, 네트워크 패킷 파서인 TCPdump를 각각 AFL++로 계측하고, 나온 크래시를 GDB와 AddressSanitizer(ASan)로 분석했다.
+- 여담으로 이 문제를 풀던 시기가 추석이였기에, 중간중간 문제 푸는 흐름이 강제로 멈춰서 상당히 힘들었다...
 
 목표는 크래시 숫자를 만드는 데서 끝내지 않고 다음 흐름을 한 번씩 완주하는 것이었다.
 
