@@ -1,6 +1,6 @@
 ---
 title: "Fuzzing101 3문제 클리어: Xpdf, libexif, TCPdump"
-date: 2026-09-27 12:00:00 +0900
+date: 2026-09-27 11:00:00 +0900
 categories: [개발, 보안]
 tags: [fuzzing, aflplusplus, asan, gdb, xpdf, libexif, tcpdump, cve, mission23]
 ---
