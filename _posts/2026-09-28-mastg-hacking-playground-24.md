@@ -7,7 +7,7 @@ tags: [owasp, mastg, android, adb, jadx, frida, sql-injection, webview, dexclass
 
 ## 1. 들어가며
 
-이번 미션은 OWASP의 교육용 취약 앱인 [MASTG Hacking Playground](https://github.com/OWASP/MASTG-Hacking-Playground)의 Android Java 앱을 대상으로 했다. 단순히 GitHub 소스를 읽는 데서 끝내지 않고, 저장소에 포함된 배포 파일 `app-x86-debug-Android5.apk`를 API 26과 API 23 에뮬레이터에 설치해 메뉴를 직접 구현했다.
+OWASP의 교육용 취약 앱인 [MASTG Hacking Playground](https://github.com/OWASP/MASTG-Hacking-Playground)의 Android Java 앱을 대상으로 했다. 저장소에 포함된 배포 파일 `app-x86-debug-Android5.apk`를 API 26과 API 23 에뮬레이터에 설치해 메뉴를 직접 구현했다.
 
 ![MASTG Hacking Playground 메인 화면](/assets/img/mastg-hacking-playground-24/01-main.png)
 _API 26 x86 에뮬레이터에서 실행한 배포 APK. 화면의 항목을 위에서부터 하나씩 실행했다._
