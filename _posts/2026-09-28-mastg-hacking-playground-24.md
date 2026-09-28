@@ -7,7 +7,7 @@ tags: [owasp, mastg, android, adb, jadx, frida, sql-injection, webview, dexclass
 
 ## 1. 들어가며
 
-이번 미션은 OWASP의 교육용 취약 앱인 [MASTG Hacking Playground](https://github.com/OWASP/MASTG-Hacking-Playground)의 Android Java 앱을 대상으로 했다. 단순히 GitHub 소스를 읽는 데서 끝내지 않고, 저장소에 포함된 배포 파일 `app-x86-debug-Android5.apk`를 API 26과 API 23 에뮬레이터에 설치해 메뉴를 직접 발화했다.
+이번 미션은 OWASP의 교육용 취약 앱인 [MASTG Hacking Playground](https://github.com/OWASP/MASTG-Hacking-Playground)의 Android Java 앱을 대상으로 했다. 단순히 GitHub 소스를 읽는 데서 끝내지 않고, 저장소에 포함된 배포 파일 `app-x86-debug-Android5.apk`를 API 26과 API 23 에뮬레이터에 설치해 메뉴를 직접 구현했다.
 
 ![MASTG Hacking Playground 메인 화면](/assets/img/mastg-hacking-playground-24/01-main.png)
 _API 26 x86 에뮬레이터에서 실행한 배포 APK. 화면의 항목을 위에서부터 하나씩 실행했다._
@@ -174,7 +174,7 @@ java.lang.UnsatisfiedLinkError: couldn't find "libstlport_shared.so"
 ```
 
 ![SQLCipher 테스트 발화 후 홈으로 종료된 화면](/assets/img/mastg-hacking-playground-24/03-encrypted-sqlite.png)
-_저장소의 배포 APK에는 `libnative.so`만 있고 SQLCipher 의존 native library가 빠져 있었다. 키 회수는 가능했지만 이 배포물로 DB 생성까지 성공했다고 쓰지는 않았다._
+_저장소의 배포 APK에는 `libnative.so`만 있고 SQLCipher 의존 native library가 빠져 있었다. 키 회수는 가능했지만 이 배포물로 DB 생성까지 성공한건... 아니기에..._
 
 ## 6. 로그, 메모리, KeyStore와 클립보드
 
@@ -363,7 +363,7 @@ Spawned `sg.vp.owasp_mobile.omtg_android`. Resuming main thread!
 
 ![SSL Pinning 테스트 화면](/assets/img/mastg-hacking-playground-24/10-frida-ssl-bypass.png)
 
-Whole-certificate 항목은 APK의 `res/raw/certificate.pem`만 신뢰하는 별도 방식이다. 앱에 포함된 Java trust code는 런타임 후킹 가능하고, 고정 인증서는 만료·교체 때 앱 업데이트가 필요하다. pinning은 보조 방어이지 클라이언트에 중요한 비밀과 권한 결정을 맡길 근거가 아니다.
+Whole-certificate 항목은 APK의 `res/raw/certificate.pem`만 신뢰하는 별도 방식이다. 앱에 포함된 Java trust code는 런타임 후킹 가능하고, 고정 인증서는 만료·교체 때 앱 업데이트가 필요하다. pinning은 보조 방어이지 클라이언트에 중요한 비밀과 권한 결정을 맡길 근거는 아닌 것 같다.
 
 ## 11. 그 밖의 항목
 
@@ -374,7 +374,7 @@ Whole-certificate 항목은 APK의 `res/raw/certificate.pem`만 신뢰하는 별
 
 ## 12. 결론
 
-이번 실습에서 가장 인상 깊었던 것은 “암호화를 썼는가”보다 **데이터와 코드가 어느 신뢰 경계를 넘는가**가 더 중요하다는 점이었다.
+이번 실습에서 가장 인상 깊었던 것은 “암호화를 썼는가”보다 **데이터와 코드가 어느정도 서로 신뢰하는가**가 더 중요하다는 점이었다.
 
 1. 내부 저장소의 `MODE_PRIVATE`은 암호화가 아니다.
 2. SQLCipher도 키가 APK 안에 있으면 root/정적 분석 공격자에게 무력화된다.
@@ -384,7 +384,7 @@ Whole-certificate 항목은 APK의 `res/raw/certificate.pem`만 신뢰하는 별
 6. TLS pinning은 Frida 같은 런타임 계측을 막는 절대 경계가 아니다.
 7. 구형 플랫폼 동작을 확인하려면 targetSdk 설명만 보지 말고 실제 API 버전에서 실행해야 한다.
 
-또한 실패도 결과였다. 배포 APK의 SQLCipher native dependency가 빠져 있다는 사실, API 26에서 `MODE_WORLD_READABLE`이 재현되지 않는다는 사실, API 17+에서 `getClass` bridge RCE가 막힌다는 사실을 구분해 기록해야 실제 분석과 과장된 체크리스트 사이의 차이가 생긴다.
+또한 실패도 결과로 정리하였다. 배포 APK의 SQLCipher native dependency가 빠져 있다는 사실, API 26에서 `MODE_WORLD_READABLE`이 재현되지 않는다는 사실, API 17+에서 `getClass` bridge RCE가 막힌다는 사실을 구분해 기록하였다.
 
 ## 13. 참고 자료
 
