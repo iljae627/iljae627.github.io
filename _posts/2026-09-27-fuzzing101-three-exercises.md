@@ -7,8 +7,11 @@ tags: [fuzzing, aflplusplus, asan, gdb, xpdf, libexif, tcpdump, cve, mission23]
 
 ## 1. 시작하며
 
-[Fuzzing101](https://github.com/antonio-morales/Fuzzing101)의 앞 세 문제를 WSL에서 풀었다. 파일 파서인 Xpdf, 라이브러리인 libexif, 네트워크 패킷 파서인 TCPdump를 각각 AFL++로 계측하고, 나온 크래시를 GDB와 AddressSanitizer(ASan)로 분석했다.
-- 여담으로 이 문제를 풀던 시기가 추석이였기에, 중간중간 문제 푸는 흐름이 강제로 멈춰서 상당히 힘들었다...
+[Fuzzing101](https://github.com/antonio-morales/Fuzzing101)의 앞 세 문제를 WSL에서 직접 풀어보았다. 퍼징의 개념과 AFL++의 기본 사용법은 이전부터 알고 있었고, 개인적으로 작은 프로그램에 재미 삼아 퍼저를 돌려본 적도 있었다. 다만 환경 구축부터 타겟 분석, 크래시 분류와 수정 버전 검증까지 한 흐름으로 정리해 본 것은 이번이 처음이었다.
+
+이번에는 파일 파서인 Xpdf, 라이브러리인 libexif, 네트워크 패킷 파서인 TCPdump를 각각 AFL++로 계측하고, 나온 크래시를 GDB와 AddressSanitizer(ASan)로 확인했다.
+
+마침 실습 기간이 추석과 겹쳐 중간중간 흐름이 끊겼다. 그래도 단순히 AFL 화면에서 크래시 숫자만 확인하지 않고, 왜 죽었는지와 수정 버전에서는 어떻게 처리되는지까지 보는 것을 목표로 했다.
 
 목표는 크래시 숫자를 만드는 데서 끝내지 않고 다음 흐름을 한 번씩 완주하는 것이었다.
 
@@ -40,7 +43,7 @@ CC=clang CFLAGS="-O1 -g -fsanitize=address -fno-omit-frame-pointer" \
 LDFLAGS="-fsanitize=address" ./configure
 ```
 
-처음에는 Xpdf를 ASan과 AFL 계측을 동시에 적용해 실행했다. 결과는 테스트 입력을 받기도 전에 signal 11로 죽었고 커버리지 튜플도 0이었다.
+처음에는 Xpdf에 ASan과 AFL 계측을 한꺼번에 적용했다. 그런데 테스트 입력을 받기도 전에 signal 11로 죽었고 커버리지 튜플도 0이었다.
 
 ![ASan과 AFL forkserver 조합이 시작 단계에서 충돌한 화면](/assets/img/fuzzing101-three-exercises/01-initial-instrumentation-crash.png)
 _크래시가 잡혔다고 성공이 아니다. 입력 실행 전에 죽었고 커버리지도 0이므로 잘못된 환경이다._
@@ -65,7 +68,7 @@ export AFL_I_DONT_CARE_ABOUT_MISSING_CRASHES=1
 
 목표인 CVE-2019-13288은 조작된 PDF 객체 참조가 `Parser::getObj()` 계열의 무한 재귀를 만들고, 스택이 소진되면서 서비스 거부를 일으키는 취약점이다.
 
-큰 PDF 여러 개보다 작은 유효 PDF 하나가 변이 속도에 유리했다. 678바이트 `helloworld.pdf`를 최소 코퍼스로 사용하고 고정 시드 123으로 실행했다.
+처음에는 PDF를 여러 개 넣었지만 파일이 클수록 실행 속도가 눈에 띄게 떨어졌다. 결국 678바이트짜리 `helloworld.pdf` 하나만 남기고 고정 시드 123으로 실행했다.
 
 ```bash
 AFL_SKIP_CPUFREQ=1 $HOME/AFLplusplus/afl-fuzz \
@@ -184,7 +187,7 @@ _8바이트로 할당된 영역의 끝보다 3바이트 뒤를 읽었다._
 ![libexif 0.6.21 수정 검증](/assets/img/fuzzing101-three-exercises/14-libexif-fixed-0.6.21.png)
 _세 입력 모두 종료 코드 0, ASan 오류 0건._
 
-이 문제에서 가장 크게 배운 점은 라이브러리 퍼징의 범위가 하네스가 호출하는 API로 결정된다는 것이다. `exif_data_fix()`를 호출하지 않았다면 퍼저를 오래 돌려도 CVE-2009-3895 경로에는 도달하지 못한다.
+이 과정에서 하네스가 단순한 입력 전달 코드가 아니라는 점을 확실히 알게 되었다. `exif_data_fix()`를 호출하지 않았다면 퍼저를 아무리 오래 돌려도 CVE-2009-3895 경로에는 도달하지 못했을 것이다.
 
 ## 5. Exercise 3 — TCPdump와 CVE-2017-13028
 
@@ -201,7 +204,7 @@ ASan build coverage: 891 tuples
 AFL-only build coverage: 471 tuples
 ```
 
-처음에는 저장소의 PCAP 379개를 전부 넣어 4시간, 약 800만 회를 실행했지만 크래시는 0개였다. 여기서 더 기다리지 않고 공식 수정 diff와 입력 구조를 분석했다.
+처음에는 저장소의 PCAP 379개를 전부 넣고 4시간 동안 약 800만 회를 실행했다. 그런데 크래시는 하나도 나오지 않았다. 무작정 더 기다리는 대신 공식 수정 diff와 PCAP 입력 구조부터 다시 살펴보았다.
 
 ### 5.2 왜 크래시가 안 나왔는가
 
@@ -260,11 +263,11 @@ udp_print → ip_print_demux → ip_print → ether_print
 ![TCPdump CVE-2017-13028 ASan 보고서](/assets/img/fuzzing101-three-exercises/16-tcpdump-cve-2017-13028-asan.png)
 _281바이트 heap 영역의 바로 다음 주소에서 4바이트를 읽었다._
 
-원인은 “경계 검사가 없음”보다 “검사 크기가 실제 사용 크기보다 작음”에 가깝다. 1바이트가 존재한다는 사실은 그 위치부터 4바이트를 읽어도 된다는 뜻이 아니다.
+처음에는 단순한 경계 검사 누락이라고 생각했지만, 정확히는 검사한 크기와 실제로 읽는 크기가 달랐다. 1바이트가 존재한다고 해서 그 위치부터 4바이트를 읽어도 되는 것은 아니었다.
 
 ### 5.5 공식 수정 확인
 
-공식 수정은 검사 대상을 vendor 배열의 첫 요소에서 magic cookie 전체 4바이트로 넓힌다. 같은 PoC를 수정 커밋 이후 빌드에 입력하면 ASan 오류 없이 잘린 BOOTP 패킷으로 처리하고 정상 종료한다.
+공식 수정은 검사 대상을 vendor 배열의 첫 요소에서 magic cookie 전체 4바이트로 넓힌다. 같은 PoC를 수정 커밋 이후 일반 Clang 빌드에 입력하면 크래시 없이 잘린 BOOTP 패킷으로 처리하고 정상 종료한다.
 
 ![TCPdump 취약 버전과 수정 버전 비교](/assets/img/fuzzing101-three-exercises/17-tcpdump-fixed-comparison.png)
 _취약 버전은 heap-buffer-overflow, 수정 버전은 경계에서 파싱을 중단한다._
@@ -290,9 +293,9 @@ _취약 버전은 heap-buffer-overflow, 수정 버전은 경계에서 파싱을 
 
 ## 7. 마치며
 
-처음에는 AFL 화면의 `saved crashes`가 1이 되면 문제가 끝난다고 생각했다. 실제 작업의 대부분은 그 다음이었다. 시작 단계 크래시와 진짜 입력 크래시를 구분하고, 여러 크래시를 원인별로 묶고, 하네스가 빠뜨린 API를 찾고, 아무것도 안 나올 때 입력 구조와 할당 방식을 다시 읽어야 했다.
+처음에는 AFL 화면의 `saved crashes`가 1이 되면 문제가 끝나는 줄 알았다. 막상 해 보니 실제 작업은 그다음부터였다. 시작 단계에서 발생한 오류와 진짜 입력 크래시를 구분해야 했고, 여러 크래시를 원인별로 묶어야 했다. 크래시가 나오지 않을 때는 퍼저만 계속 돌리는 것이 아니라 하네스와 입력 구조를 다시 봐야 했다.
 
-세 문제를 통해 커버리지 기반 퍼징의 전체 사이클을 경험했다. 가장 중요한 교훈은 “더 오래 돌리기” 전에 “이 입력과 하네스로 목표 경로에 도달할 수 있는가”를 확인해야 한다는 점이다.
+예전에는 퍼저를 가볍게 돌려보고 크래시가 잡히는 과정을 보는 것 자체가 재미있었다면, 이번에는 그 뒤의 분석 과정에 더 집중했다. 세 문제를 풀면서 환경 구축부터 크래시 분류와 수정 버전 확인까지 연결할 수 있었다. 가장 크게 느낀 점은 “더 오래 돌리기” 전에 “지금 만든 입력과 하네스로 목표 코드에 도달할 수 있는가”부터 확인해야 한다는 것이다.
 
 ## 8. 참고 자료
 
