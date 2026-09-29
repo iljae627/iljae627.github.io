@@ -236,8 +236,8 @@ $HOME/AFLplusplus/afl-fuzz -m none -t 2000 -s 123 \
 
 넓은 코퍼스에서 800만 번 동안 나오지 않던 목표 크래시가 표적 코퍼스에서는 2,973번째 실행의 `havoc` 단계에서 저장됐다.
 
-![TCPdump 표적 AFL 퍼징에서 저장 크래시가 나온 화면](/assets/img/fuzzing101-three-exercises/15-tcpdump-afl-crashes.png)
-_정상 경계 입력을 출발점으로 잡자 AFL이 목표 조건에 도달했다._
+![TCPdump 표적 AFL 퍼징의 fuzzer_stats와 크래시 파일](/assets/img/fuzzing101-three-exercises/15-tcpdump-afl-crashes.png)
+_종료 후 보존된 `fuzzer_stats`와 크래시 파일을 다시 확인했다. 6,282회 실행 중 2개가 저장됐고, 목표 크래시는 2,973번째 실행에서 생성됐다._
 
 ### 5.4 ASan 트리아지와 원인
 
@@ -301,3 +301,8 @@ _취약 버전은 heap-buffer-overflow, 수정 버전은 경계에서 파싱을 
 - [libexif 공식 저장소](https://github.com/libexif/libexif)
 - [TCPdump CVE-2017-13028 공식 수정 커밋](https://github.com/the-tcpdump-group/tcpdump/commit/85078eeaf4bf8fcdc14a4e79b516f92b6ab520fc)
 - [CVE-2012-2836](https://www.cve.org/CVERecord?id=CVE-2012-2836)
+- [karsel83 — Fuzzing101 풀이](https://karsel83.github.io/posts/fuzz2/)
+- [mossvana — Fuzzing101 Exercise 1](https://mossvana.github.io/dev/fuzzing101-1/)
+- [mossvana — Fuzzing101 Exercise 2](https://mossvana.github.io/dev/fuzzing101-2/)
+- [mossvana — Fuzzing101 Exercise 4](https://mossvana.github.io/dev/fuzzing101-4/)
+- [MONKEY PATCH — Fuzzing101 Write-up v2](https://wtcyj.github.io/posts/fuzzing101-writeup-v2/)
