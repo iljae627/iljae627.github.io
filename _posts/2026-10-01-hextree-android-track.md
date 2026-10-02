@@ -1,5 +1,5 @@
 ---
-title: "HexTree Android Track 14/14 완료: Android 공격 표면 실습"
+title: "HexTree Android Track"
 date: 2026-10-01 21:40:00 +0900
 categories: [Security, Android]
 tags: [hextree, android, bugbounty, adb, intent, deeplink, service, broadcast-receiver, content-provider, fileprovider, webview, frida, writeup, mission47]
@@ -7,12 +7,10 @@ tags: [hextree, android, bugbounty, adb, intent, deeplink, service, broadcast-re
 
 ## 1. 들어가며
 
-[HexTree Android Track](https://app.hextree.io/map/android)의 14개 과정을 완료했다. 이번 트랙의 핵심은 Android 앱의 화면을 따라가는 것이 아니라, 앱 밖에서 도달할 수 있는 진입점과 그 뒤의 신뢰 경계를 찾는 것이었다.
+[HexTree Android Track](https://app.hextree.io/map/android)의 14개 과정을 완료했다.
 
 ![HexTree Android Track 14/14 완료 화면](/assets/img/hextree-android-track/01-android-track-14-of-14.png)
 _2026년 10월 1일 기준 Android Track 14/14 완료 화면._
-
-> 이 글의 명령과 PoC는 HexTree 교육용 앱, 개인 에뮬레이터, 분석이 허가된 APK에서만 실행했다.
 
 ## 2. 실습 환경과 분석 흐름
 
@@ -23,9 +21,8 @@ _2026년 10월 1일 기준 Android Track 14/14 완료 화면._
 | 주요 도구 | Android Studio, Android Emulator, ADB, JADX, apktool, Frida |
 | 정적 분석 | `AndroidManifest.xml`, JADX Java 코드, resource, native library |
 | 동적 분석 | `am`, `pm`, `content`, `logcat`, Frida Java bridge |
-| 완료 범위 | Android 과정 14/14 |
 
-전체 실습에서는 다음 순서를 반복했다.
+전체 실습 순서.
 
 ```text
 Manifest에서 외부 진입점 식별
@@ -34,8 +31,6 @@ Manifest에서 외부 진입점 식별
   → ADB 또는 공격 앱으로 재현
   → 영향과 수정 방안 정리
 ```
-
-`android:exported="true"` 자체는 취약점이 아니다. 문제는 외부 호출자가 보낸 값을 인증·인가 없이 신뢰하고 내부 기능, 파일, 토큰 또는 권한 있는 동작으로 연결할 때 발생한다.
 
 ## 3. 14개 과정에서 학습한 내용
 
@@ -58,7 +53,7 @@ Manifest에서 외부 진입점 식별
 
 ## 4. ADB와 앱 컴포넌트 열거
 
-런처에 보이는 화면이 앱의 전체 공격 표면은 아니다. `MAIN`/`LAUNCHER` 필터가 없는 Activity도 Manifest에 등록되어 있고, exported 상태라면 명시적 Intent로 열 수 있다.
+런처에 보이는 화면이 앱의 전체 공격 표면이 아니다. `MAIN`/`LAUNCHER` 필터가 없는 Activity도 Manifest에 등록되어 있고, exported 상태라면 명시적 Intent로 열 수 있다.
 
 ```bash
 adb install -r adb_test_application.apk
@@ -78,7 +73,7 @@ adb shell monkey -p io.hextree.adbtestapplication 1
 adb logcat -d "MainActivity:V *:S"
 ```
 
-이 과정에서 배운 가장 단순하지만 중요한 규칙은 **UI 메뉴만 보지 말고 Manifest와 package manager 결과를 함께 본다**는 것이다.
+**UI 메뉴만 보지 말고 Manifest와 package manager 결과를 함께 보라**
 
 ## 5. Intent와 Activity 공격 표면
 
@@ -87,7 +82,7 @@ adb logcat -d "MainActivity:V *:S"
 Intent Attack Surface 앱의 첫 실습은 `Flag1Activity`, `Flag2Activity`, `Flag3Activity`에 필요한 component, action, data를 구성하는 문제였다.
 
 ![Intent startActivity 실습 완료 화면](/assets/img/hextree-android-track/02-intent-startactivity.png)
-_공개 Activity, extra, data URI를 조합하는 `Practice startActivity()` 실습._
+_공개 Activity, extra, data URI를 조합하는 `Practice startActivity()` _
 
 ```bash
 # 공개 Activity 직접 실행
@@ -127,13 +122,13 @@ outer.putExtra("android.intent.extra.INTENT", inner);
 
 ### 5.3 implicit Intent hijacking
 
-암시적 Intent는 수신 앱을 고정하지 않는다. 민감 정보를 extra에 넣어 보내면 동일한 intent filter를 등록한 공격 앱이 데이터를 받을 수 있다. `startActivityForResult()`를 사용한다면 공격 앱이 조작된 결과까지 돌려줄 수 있다.
+암시적인 Intent는 수신 앱을 고정하지 않는다. 민감 정보를 extra에 넣어 보내면 동일한 intent filter를 등록한 공격 앱이 데이터를 받을 수 있다. `startActivityForResult()`를 사용한다면 공격 앱이 조작된 결과까지 돌려줄 수 있다.
 
 민감 데이터가 포함된 앱 간 통신은 explicit Intent, package 제한, signature permission을 우선 사용한다.
 
 ## 6. Deep Link와 브라우저 진입점
 
-custom scheme은 여러 앱이 같은 scheme을 등록할 수 있어 소유권을 보장하지 않는다. 또한 category나 `com.android.browser.application_id` 같은 extra는 호출자가 직접 만들 수 있으므로 브라우저에서 왔다는 증거가 아니다.
+custom scheme은 여러 앱이 같은 scheme을 등록할 수 있어 소유권을 보장하지 않는다. 또한 category나 `com.android.browser.application_id` 같은 extra는 호출자가 직접 만들 수 있으므로 브라우저에서 왔다는 증거로 볼 수 없다.
 
 ```bash
 adb shell am start \
@@ -215,7 +210,7 @@ Class<?> iface = loader.loadClass(
 
 ### 9.1 ContentProvider SQL injection
 
-Provider의 `projection`, `selection`, `sortOrder`도 SQL 입력이다. caller가 전달한 문자열을 그대로 SQLite query에 넣으면 로컬 DB에서도 SQL injection이 발생한다.
+Provider의 `projection`, `selection`, `sortOrder`도 SQL 입력이다. caller가 전달한 문자열을 그대로 SQLite 쿼리에 넣으면 로컬 DB에서도 SQL injection이 발생한다.
 
 ```bash
 adb shell content query \
@@ -303,7 +298,7 @@ settings.setAllowUniversalAccessFromFileURLs(true);
 
 ### 10.3 Custom Tabs `postMessage`
 
-Custom Tabs는 WebView보다 브라우저 프로세스에 격리되지만, 앱이 공격자 제어 URL과 message channel을 만들고 origin을 검증하지 않으면 악성 페이지가 기대한 JSON을 돌려 앱 로직을 속일 수 있다.
+Custom Tabs는 WebView보다 브라우저 프로세스에 격리되지만, 앱이 공격자 제어 URL과 message channel을 만들고 origin을 검증하지 않으면 악성 페이지가 JSON을 돌려 앱 로직을 속일 수 있다.
 
 ## 11. Frida 동적 계측
 
@@ -383,8 +378,6 @@ BLE 분석에서는 Manifest 권한, Android Bluetooth API, GATT service와 char
 
 ## 15. Bug Bounty 보고서로 정리하는 법
 
-실제 제보에서는 코드가 이상해 보인다는 사실보다 외부 공격자가 도달할 수 있고 보안 영향이 발생한다는 사실이 중요하다.
-
 ```markdown
 ### 제목
 외부 앱에서 exported Activity를 통해 인증 없이 내부 기능 실행 가능
@@ -414,7 +407,7 @@ BLE 분석에서는 Manifest 권한, Android Bluetooth API, GATT service와 char
 
 ## 16. 결론
 
-14개 과정을 관통한 핵심은 **Android component가 연결되는 지점마다 신뢰 경계가 생긴다**는 것이었다.
+14개 과정 전부 Android component가 연결되는 지점마다 신뢰 경계가 생긴다는 것이었다.
 
 1. exported component는 공격 가능한 API처럼 다뤄야 한다.
 2. Intent의 action, category, URI, extra는 공격자가 만들 수 있다.
@@ -422,14 +415,12 @@ BLE 분석에서는 Manifest 권한, Android Bluetooth API, GATT service와 char
 4. FileProvider와 WebView는 설정 하나보다 여러 기능의 조합에서 더 큰 문제가 발생한다.
 5. 내부 저장소는 접근 제어이지 자동 암호화가 아니다.
 6. Frida는 클라이언트의 검사와 비밀을 절대적인 보안 경계로 삼을 수 없음을 보여 준다.
-7. 버그 바운티 보고서는 원인보다 먼저 도달 가능성과 실제 영향을 증명해야 한다.
 
-Android 플랫폼이 여러 보호 장치를 제공하더라도 앱의 잘못된 신뢰 판단까지 자동으로 고쳐 주지는 않는다. 앞으로 앱을 분석할 때는 화면 단위가 아니라 **Manifest 진입점 → IPC 입력 → 내부 동작 → 데이터와 권한의 영향**을 하나의 흐름으로 추적할 것이다.
+Android 플랫폼이 여러 보호 장치를 제공하더라도 앱의 잘못된 신뢰 판단까지 자동으로 고쳐 주지는 않기에 앱을 분석할 때는 화면 단위가 아니라 **Manifest 진입점 → IPC 입력 → 내부 동작 → 데이터와 권한의 영향**을 하나의 흐름으로 추적하는 방향이 좋을듯하다.
 
 ## 참고 자료
 
 - [HexTree Android Map](https://app.hextree.io/map/android)
-- [참고한 HexTree Android Track write-up](https://katarinabluu-gosegulover.github.io/Hercent.github.io/posts/hextreeio/)
 - [Android Developers: App components](https://developer.android.com/guide/components/fundamentals)
 - [Android Developers: Intents and intent filters](https://developer.android.com/guide/components/intents-filters)
 - [Android Developers: Services](https://developer.android.com/develop/background-work/services)
