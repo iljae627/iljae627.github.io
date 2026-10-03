@@ -8,10 +8,10 @@ mermaid: true
 
 ## 1. 시작하며
 
-이번 미션은 OpenZeppelin의 Web3 워게임 **Ethernaut**를 처음부터 끝까지 풀며 Solidity와 EVM 보안 개념을 익히는 것이었다. 예전 라이트업 대부분은 Level 0~30 전후에서 끝나지만, 2026년 10월 2일 공식 저장소의 목록은 **Level 0부터 40까지 총 41개**다.
+**Ethernaut**은 OpenZeppelin의 Web3 워게임이며 Solidity와 EVM 보안 개념을 익힐수있다. 2026년 10월 2일 공식 저장소의 목록은 **Level 0부터 40까지 총 41개**다.
 
 ![Ethernaut 공식 페이지](/assets/img/ethernaut-all-clear/01-ethernaut-home.png)
-_Ethernaut 공식 페이지. 실제 레벨 목록과 난이도를 먼저 확인했다._
+_Ethernaut 공식 페이지_
 
 브라우저 콘솔만으로 한 번씩 호출하는 데 그치지 않고 공식 저장소를 받아 Foundry 테스트로 공격 전·후 상태와 `validateInstance()` 결과를 확인했다. 기준 커밋은 `d05643a40aa98c45d66247c69ffceab8f44dd8cb`, 실행 환경은 Forge 1.8.4와 Prague EVM이다.
 
@@ -20,12 +20,7 @@ _Ethernaut 공식 페이지. 실제 레벨 목록과 난이도를 먼저 확인�
 → validateInstance() 확인 → 취약점 원인과 대응책 정리
 ```
 
-공식 테스트 42개 스위트의 98개 테스트가 모두 통과했다. 공식 테스트가 아직 없는 Level 38·39는 별도 테스트를 작성해 각각 EIP-7702 재진입과 EIP-2098 서명 재사용을 재현했다. Level 40은 독립 PoC 테스트로 함수 선택자 충돌과 마지막 배열 원소가 해시에서 빠지는 결함을 확인했다.
-
-![Foundry 전체 테스트 통과](/assets/img/ethernaut-all-clear/02-all-tests.png)
-_공식 Foundry 테스트 실행 결과. 42개 스위트, 98개 테스트, 실패 0._
-
-> 이 글의 화면은 Sepolia 거래를 성공한 것처럼 꾸민 이미지가 아니다. 공식 소스를 로컬 EVM에서 실행한 결과를 읽기 좋게 재구성한 캡처다. Motorbike처럼 하드포크 이후 공개 네트워크 판정이 깨진 레벨도 있어, 재현 가능한 로컬 검증을 기준으로 삼았다.
+공식 테스트 42개 스위트의 98개 테스트가 모두 통과했다. 공식 테스트가 아직 없는 Level 38·39는 별도 테스트를 작성해 각각 EIP-7702 재진입과 EIP-2098 서명 재사용을 재현했다. 또한 Level 40은 독립 PoC 테스트로 함수 선택자 충돌과 마지막 배열 원소가 해시에서 빠지는 결함을 확인했다.
 
 ## 2. 먼저 익힌 Solidity와 EVM 문법
 
@@ -43,7 +38,7 @@ Ethernaut 풀이에 반복해서 쓰인 요소는 다음과 같다.
 | ECDSA | 메시지 도메인, nonce, 정규화가 빠지면 서명 재사용이 가능하다 |
 | EIP-7702 | EOA도 위임 코드를 실행할 수 있어 EOA/컨트랙트 이분법이 깨진다 |
 
-`private`은 접근 제어가 아니라 Solidity 코드 수준의 가시성일 뿐이고, 블록 값은 비밀 난수가 아니며, 외부 호출 한 번은 제어권을 상대에게 넘기는 행위라는 세 문장이 전체 미션을 관통했다.
+`private`은 접근 제어가 아니라 Solidity 코드 수준의 가시성일 뿐이고, 블록 값은 비밀 난수가 아니며, 외부 호출 한 번은 제어권을 상대에게 넘기는 행위라는 세 문장이 전체 미션을 풀수있었다.
 
 ## 3. Level 0–7: 호출 문맥과 기본 함정
 
@@ -4486,29 +4481,14 @@ verify-before-execute, 전체 배열 commitment, 정확한 ABI 검증을 적용�
 | 계정 추상화 | Cashback, UniqueNFT | EOA/컨트랙트 이분법 제거 |
 | Cross-chain proof | NotOptimisticPortal | verify-before-execute, 전체 메시지 commitment |
 
-## 10. 14일간 학습 흐름으로 정리
+## 10. 마치며
 
-| 일차 | 학습 및 풀이 범위 |
-|---|---|
-| 1–2일 | Solidity 기본 문법, ABI, Remix/Foundry, Level 0–5 |
-| 3–4일 | call/delegatecall, fallback, storage, Level 6–10 |
-| 5–6일 | 인터페이스 신뢰, gas, 생성자, ERC-20, Level 11–15 |
-| 7–8일 | storage collision, CREATE, bytecode, Level 16–21 |
-| 9–10일 | AMM, proxy, UUPS, Forta, Level 22–27 |
-| 11–12일 | calldata, 회계, ECDSA, Level 28–34 |
-| 13일 | 곡선 서명, runtime bytecode, EIP-7702, Level 35–39 |
-| 14일 | Merkle trie proof, Level 40, 전체 회귀 테스트와 라이트업 |
-
-## 11. 마치며
-
-초반에는 `private` 값을 읽고 fallback을 호출하는 정도였지만, 뒤로 갈수록 문제의 중심이 “문법 실수”에서 “시스템이 믿고 있는 불변식”으로 이동했다. 특히 다음 네 가지가 가장 크게 남았다.
+초반은 `private` 값을 읽고 fallback을 호출하는 정도였지만 뒷문제로 갈수록 시스템이 믿고 있는 불변식으로 이동했다. 밑 네 가지를 주의하자... 
 
 - 외부 호출은 상대에게 제어권을 넘기는 일이다.
 - 검증한 데이터와 실제 실행한 데이터가 정확히 같아야 한다.
 - 서명은 raw bytes가 아니라 의도, 도메인, nonce를 묶어 검증해야 한다.
 - EIP-7702 이후 `tx.origin == msg.sender`, `code.length == 0` 같은 EOA 판별은 보안 경계가 아니다.
-
-Ethernaut는 오래된 취약점 모음에 머물지 않고 프록시, 서명, 계정 추상화, L2 proof까지 계속 확장되고 있었다. 한 번 올클리어하는 것으로 끝내기보다 새 레벨과 EVM 하드포크가 추가될 때 기존 가정이 어떻게 깨지는지 다시 확인하는 습관이 필요하다.
 
 ## 참고 자료
 
@@ -4518,5 +4498,3 @@ Ethernaut는 오래된 취약점 모음에 머물지 않고 프록시, 서명, �
 - [EIP-2098: Compact Signature Representation](https://eips.ethereum.org/EIPS/eip-2098)
 - [EIP-7702: Set Code for EOAs](https://eips.ethereum.org/EIPS/eip-7702)
 - [EIP-6780: SELFDESTRUCT only in same transaction](https://eips.ethereum.org/EIPS/eip-6780)
-- [참고 라이트업 1](https://katarinabluu-gosegulover.github.io/Hercent.github.io/posts/ethernaut-writeups/)
-- [참고 라이트업 2](https://0xaxii.github.io/posts/ethernaut-writeups/)
