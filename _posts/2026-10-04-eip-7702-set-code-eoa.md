@@ -13,7 +13,7 @@ EOA는 개인키로 제어되고 코드가 없는 이더리움 계정이다. 스
 
 EIP-7702는 기존 EOA가 **다른 컨트랙트의 코드를 자신의 코드처럼 실행하도록 위임**할 수 있게 한다. 2025년 5월 Pectra 업그레이드에서 활성화됐으며 Type 4, 즉 Set Code 트랜잭션을 추가했다.
 
-![EIP-7702 공식 문서](/assets/img/mission-19-eip-study/03-eip-7702-official.jpg)
+![EIP-7702 공식 문서](/assets/img/mission-19-eip-study/03-eip-7702-official.png)
 _EIP-7702 공식 사양. EOA의 코드 위임과 새로운 Type 4 트랜잭션을 정의한다._
 
 ## 2. Authorization List와 위임 표시자
