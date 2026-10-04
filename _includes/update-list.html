@@ -5,6 +5,7 @@
 {% assign all_list = '' | split: '' %}
 
 {% for post in site.posts %}
+  {% if post.hidden != true %}
   {% assign datetime = post.last_modified_at | default: post.date %}
 
   {% capture elem %}
@@ -12,6 +13,7 @@
   {% endcapture %}
 
   {% assign all_list = all_list | push: elem %}
+  {% endif %}
 {% endfor %}
 
 {% assign all_list = all_list | sort | reverse %}

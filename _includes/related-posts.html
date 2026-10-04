@@ -28,7 +28,7 @@
 {% for i in (0..last_index) %}
   {% assign post = match_posts[i] %}
 
-  {% if post.url == page.url %}
+  {% if post.url == page.url or post.hidden == true %}
     {% continue %}
   {% endif %}
 
