@@ -1,14 +1,14 @@
 ---
-title: "미션 #19: 다섯 가지 EIP로 살펴본 이더리움의 진화"
+title: "EIP로 살펴본 이더리움"
 date: 2026-10-04 09:00:00 +0900
 categories: [Blockchain, Ethereum]
-tags: [Ethereum, EIP, ERC, Smart-Contract, Account-Abstraction, Rollup, 미션19]
+tags: [Ethereum, EIP, ERC, Smart-Contract, Account-Abstraction, Rollup]
 mermaid: true
 ---
 
 ## 1. 미션을 시작하며
 
-EIP(Ethereum Improvement Proposal)는 이더리움의 프로토콜, 애플리케이션 인터페이스와 생태계의 공통 규칙을 제안하는 문서다. 단순히 번호와 함수 목록을 외우는 대신 **왜 등장했는지, 어떤 문제를 해결했는지, 메인넷에서는 어떻게 사용되는지**를 기준으로 다섯 가지 EIP를 공부했다.
+EIP(Ethereum Improvement Proposal)는 이더리움의 프로토콜, 애플리케이션 인터페이스와 생태계의 공통 규칙을 제안하는 문서다. **왜 등장했는지, 어떤 문제를 해결했는지, 메인넷에서는 어떻게 사용되는지**를 기준으로 다섯 가지 EIP를 공부했다.
 
 이번에 선택한 주제는 다음과 같다.
 
@@ -20,46 +20,34 @@ EIP(Ethereum Improvement Proposal)는 이더리움의 프로토콜, 애플리케
 | EIP-1559 | Fee Market | 불안정한 1가격 가스비 경매 | Core |
 | EIP-4844 | Blob Transactions | Rollup의 비싼 calldata 게시 비용 | Core |
 
-합격 사례에서 자주 다룬 토큰 표준을 그대로 반복하지 않기 위해 EIP-1559와 EIP-4844만 유지하고, ERC-2612·ERC-4337·EIP-7702를 새롭게 선정했다.
-
 ![EIP-7702 메인넷 Type 4 거래 확인](/assets/img/mission-19-eip-study/08-eip7702-type4-mainnet-tx.jpg)
-_공식 문서만 읽는 데 그치지 않고 Etherscan과 Blobscan에서 실제 메인넷 적용 사례를 확인했다._
+_Etherscan과 Blobscan에서 실제 메인넷 적용 사례를 확인_
 
 ## 2. 전체 글 바로가기
 
-### [1편 — ERC-2612: approve 트랜잭션을 서명으로 바꾸는 Permit](/posts/eip-2612-permit/)
+### [ERC-2612: approve 트랜잭션을 서명으로 바꾸는 Permit](/posts/eip-2612-permit/)
 
 ERC-20을 dApp에서 사용하려면 `approve`와 실제 실행을 따로 보내야 한다. ERC-2612는 EIP-712 서명을 이용해 allowance를 변경함으로써 사용자의 승인 트랜잭션을 줄인다. `DOMAIN_SEPARATOR`, nonce와 deadline이 재사용 공격을 어떻게 막는지 분석하고, 메인넷 Uniswap V2 LP 토큰의 `permit` 구현을 확인했다.
 
-**핵심 키워드:** `permit`, EIP-712, gasless approval, nonce, Uniswap V2
-
-### [2편 — ERC-4337: 프로토콜 변경 없이 구현한 계정 추상화](/posts/eip-4337-account-abstraction/)
+### [ERC-4337: 프로토콜 변경 없이 구현한 계정 추상화](/posts/eip-4337-account-abstraction/)
 
 ERC-4337은 별도의 합의 계층 변경 없이 `UserOperation`, Bundler, EntryPoint, Paymaster를 이용해 스마트 계정을 구현한다. 가스 대납, 배치 실행, 소셜 복구와 세션 키가 가능한 이유를 실행 흐름 중심으로 정리하고, 실제 메인넷 EntryPoint v0.7 컨트랙트를 살펴봤다.
 
-**핵심 키워드:** Account Abstraction, UserOperation, Bundler, EntryPoint, Paymaster
-
-### [3편 — EIP-7702: 기존 EOA를 스마트 계정처럼 만드는 코드 위임](/posts/eip-7702-set-code-eoa/)
+### [EIP-7702: 기존 EOA를 스마트 계정처럼 만드는 코드 위임](/posts/eip-7702-set-code-eoa/)
 
 Pectra 업그레이드에 포함된 EIP-7702는 EOA가 다른 컨트랙트 코드에 실행을 위임할 수 있게 한다. Type 4 트랜잭션과 Authorization List, delegation indicator의 구조를 분석하고 메인넷의 OKX EIP-7702 Delegator 사용 거래를 확인했다. 위임 서명 피싱과 저장소 충돌 같은 새로운 보안 문제도 함께 다뤘다.
-
-**핵심 키워드:** Pectra, Type 4, Authorization List, code delegation, EOA
 
 ### [4편 — EIP-1559: 가스비 경매를 예측 가능한 수수료 시장으로](/posts/eip-1559-fee-market/)
 
 EIP-1559는 사용자가 다른 사람의 입찰가를 추측하던 가스비 시장을 `base fee + priority fee` 구조로 바꿨다. base fee 조정 공식과 탄력적 블록 크기, 소각 구조를 계산 예제와 함께 설명하고, Etherscan의 실제 메인넷 블록에서 base fee와 burnt fee를 확인했다.
 
-**핵심 키워드:** Type 2, base fee, priority fee, fee burn, elastic block
-
 ### [5편 — EIP-4844: Blob 트랜잭션으로 Rollup 데이터 비용 낮추기](/posts/eip-4844-blob-transactions/)
 
 EIP-4844는 Rollup 데이터가 비싼 영구 calldata를 사용하던 문제를 blob이라는 임시 데이터 공간으로 해결했다. Type 3 트랜잭션, KZG commitment, blob sidecar와 독립 수수료 시장을 분석하고 Blobscan에서 실제 Rollup blob 게시 현황을 확인했다.
 
-**핵심 키워드:** Dencun, Proto-Danksharding, Type 3, blob, KZG, Rollup
-
 ## 3. 다섯 EIP의 연결 관계
 
-처음에는 서로 다른 주제처럼 보였지만 학습을 마치고 나니 다섯 EIP는 두 흐름으로 연결됐다.
+다섯 EIP는 두 흐름으로 연결됐다.
 
 ```mermaid
 flowchart TB
@@ -78,7 +66,7 @@ flowchart TB
 
 ERC-2612는 토큰 승인 한 단계를 서명으로 바꿨고, ERC-4337은 계정의 인증과 가스 지불 전체를 프로그래밍 가능하게 만들었다. EIP-7702는 이미 사용 중인 EOA가 주소를 바꾸지 않고 이 스마트 계정 생태계에 참여할 길을 열었다.
 
-EIP-1559는 실행 블록 공간의 가격을 수요에 따라 자동 조정했고, EIP-4844는 같은 발상을 Rollup 전용 데이터 공간에 적용했다. EIP-4844가 일반 L1 가스를 직접 싸게 만드는 제안이 아니라 별도의 blob 시장을 만든 제안이라는 점이 특히 중요했다.
+EIP-1559는 실행 블록 공간의 가격을 수요에 따라 자동 조정했고, EIP-4844는 같은 발상을 Rollup 전용 데이터 공간에 적용했다. EIP-4844가 일반 L1 가스를 직접 싸게 만드는 제안이 아니라 별도의 blob 시장을 만든 제안이라는 점이 특이했다.
 
 ## 4. 공통적으로 발견한 설계 원칙
 
@@ -110,14 +98,14 @@ Permit의 allowance, ERC-4337 Paymaster, EIP-7702 delegate code는 사용 과정
 
 ## 6. 마치며
 
-EIP 문서는 짧은 인터페이스나 수식 뒤에 생태계의 긴 논의를 담고 있다. 이번 미션에서는 공식 사양을 출발점으로 삼되 OpenZeppelin·ethereum.org 문서와 메인넷 탐색기를 함께 확인했다. 그 과정에서 표준을 이해하려면 다음 네 질문을 반복하는 것이 효과적이었다.
+EIP 문서는 짧은 인터페이스, 수식만 봐야할 것이 아니라 생태계에 대한 글을 담고 있다. 이번에는 공식 사양을 출발점으로 삼고 OpenZeppelin·ethereum.org 문서와 메인넷 탐색기를 함께 확인했다. 그 과정에서 표준을 이해하려면 다음 네 질문을 반복하는 것이 효과적이었다.
 
 1. 기존 방식에서 누가 어떤 불편이나 비용을 겪었는가?
 2. 새 필드와 인터페이스는 어떤 신뢰 가정을 추가하는가?
 3. 실패하거나 악용됐을 때 피해 범위는 어디까지인가?
 4. 실제 메인넷 컨트랙트와 트랜잭션에서 어떻게 관찰되는가?
 
-다섯 편의 상세 글은 위 목차에서 각각 확인할 수 있다. 앞으로 새로운 EIP를 접할 때도 단순 요약보다 **문제–설계–사용 사례–한계**의 흐름으로 분석할 예정이다.
+새로운 EIP를 접하게 된다면 요약보다 **문제–설계–사용 사례–한계**의 흐름으로 분석하는게 좋을 듯 하다.
 
 ## 참고 자료
 

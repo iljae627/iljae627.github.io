@@ -16,7 +16,7 @@ calldata는 EVM이 읽을 수 있고 영구적으로 보존된다. Rollup 데이
 EIP-4844, Proto-Danksharding은 Rollup 전용 임시 데이터 공간인 **blob**과 Type 3 트랜잭션을 도입했다. 2024년 3월 Dencun 업그레이드에서 메인넷에 활성화됐다.
 
 ![EIP-4844 공식 문서](/assets/img/mission-19-eip-study/05-eip-4844-official.jpg)
-_EIP-4844 공식 문서. EVM이 직접 읽지 않는 대용량 blob과 그 commitment를 도입한다._
+_EIP-4844 공식 문서. EVM이 직접 읽지 않는 대용량 blob과 그 commitment를 도입_
 
 ## 2. Blob이 calldata와 다른 점
 
@@ -87,7 +87,7 @@ blob fee = blob gas used × blob base fee
 Blobscan의 최신 블록 화면에서 블록별 blob 개수, blob 사용량, 제출 주소와 Type 3 트랜잭션을 확인했다.
 
 ![Blobscan 메인넷 Blob 블록](/assets/img/mission-19-eip-study/10-eip4844-blobscan-blocks.jpg)
-_Blobscan의 메인넷 블록 목록. Rollup들이 올린 blob과 별도 blob 수수료 시장을 확인할 수 있다._
+_Blobscan의 메인넷 블록 목록. Rollup들이 올린 blob과 별도 blob 수수료 시장을 확인_
 
 실제 사용 주체는 Optimism, Base, Arbitrum, zkSync 같은 Rollup batch poster다. Sequencer가 L2 거래를 모아 압축하고 blob으로 L1에 게시한다. 일반 L2 사용자는 Type 3 거래를 직접 만들지 않지만, 결과적으로 L2 거래 수수료의 데이터 게시 부분이 줄어드는 효과를 받는다.
 
@@ -128,7 +128,7 @@ KZG commitment는 trusted setup을 사용한다. Ethereum은 다수 참여자의
 
 EIP-4844는 Rollup 데이터를 EVM 실행 데이터와 분리해 blob이라는 임시 공간에 넣었다. Type 3 거래, KZG commitment, sidecar 전파, 독립 blob fee market을 한 번에 도입했고 미래 Data Availability Sampling으로 이어질 형식을 먼저 배치했다.
 
-Blobscan에서 실제 블록을 살펴보니 “L2 수수료가 낮아졌다”는 결과보다 그 원인이 명확해졌다. Rollup이 더 이상 영구 calldata 가격을 지불하지 않고 **검증에 필요한 기간만 데이터 가용성을 구매하기 때문**이다. EIP-1559가 실행 블록 공간의 가격을 개선했다면, EIP-4844는 Rollup 데이터만을 위한 두 번째 시장을 만든 셈이다.
+Blobscan에서 실제 블록을 살펴보니 “L2 수수료가 낮아졌다”는 결과보다 그 원인이 명확해졌다. Rollup이 더 이상 영구 calldata 가격을 지불하지 않고 **검증에 필요한 기간만 데이터 가용성을 구매하기 때문**이다. EIP-4844는 Rollup 데이터만을 위한 두 번째 시장을 만든 셈이다.
 
 ## 참고 자료
 

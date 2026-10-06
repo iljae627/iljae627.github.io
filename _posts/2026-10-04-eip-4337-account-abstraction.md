@@ -19,7 +19,7 @@ hidden: true
 계정 추상화(Account Abstraction)는 검증 로직을 고정된 ECDSA 규칙에서 스마트 컨트랙트 코드로 옮기려는 아이디어다. ERC-4337은 합의 계층을 바꾸지 않고 별도의 인프라와 `EntryPoint` 컨트랙트로 이를 구현한다.
 
 ![ERC-4337 공식 문서](/assets/img/mission-19-eip-study/02-eip-4337-official.jpg)
-_ERC-4337은 합의 규칙을 바꾸지 않고 상위 계층의 UserOperation과 EntryPoint를 사용한다._
+_ERC-4337은 합의 규칙을 바꾸지 않고 상위 계층의 UserOperation과 EntryPoint를 사용_
 
 ## 2. 트랜잭션 대신 UserOperation
 
@@ -89,7 +89,7 @@ function handleOps(
 메인넷의 EntryPoint v0.7 주소 `0x0000000071727De22E5E9d8BAf0edAc6f37da032`를 확인했다. Etherscan의 검증된 ABI에는 `handleOps`, `getUserOpHash`, `depositTo`, `addStake`와 `UserOperationEvent`가 존재한다.
 
 ![메인넷 ERC-4337 EntryPoint](/assets/img/mission-19-eip-study/07-erc4337-entrypoint-mainnet.jpg)
-_ERC-4337 EntryPoint v0.7 메인넷 컨트랙트. UserOperation 묶음 실행과 예치금·스테이크를 관리한다._
+_ERC-4337 EntryPoint v0.7 메인넷 컨트랙트. UserOperation 묶음 실행과 예치금·스테이크를 관리_
 
 EntryPoint는 중앙 서버가 아니다. 온체인에 배포된 검증·정산의 공통 지점이다. Bundler는 서로 경쟁할 수 있지만 동일 버전의 EntryPoint를 기준으로 UserOperation 유효성을 판단한다.
 
@@ -131,7 +131,7 @@ Paymaster와 Factory는 여러 사용자가 공유하므로 이들의 상태 변
 
 ERC-4337은 이더리움 합의를 변경하지 않고 `UserOperation → Bundler → EntryPoint → Smart Account`라는 새 실행 경로를 만들었다. 메인넷 EntryPoint를 직접 확인하면서 계정 추상화가 개념 제안에 머문 것이 아니라 실제 컨트랙트와 이벤트로 운영되는 상위 프로토콜이라는 점을 확인했다.
 
-EIP-7702가 기존 EOA에 코드 위임 능력을 더한다면, ERC-4337은 별도 스마트 계정을 중심으로 사용자 작업을 수집·검증·실행하는 완성된 생태계에 가깝다. 둘은 경쟁 관계라기보다 함께 사용할 수 있도록 수렴하고 있다.
+EIP-7702가 기존 EOA에 코드 위임 능력을 더한다면, ERC-4337은 별도 스마트 계정을 중심으로 사용자 작업을 수집·검증·실행하는 생태계에 가깝다. 둘은 경쟁 관계라기보다 함께 사용할 수 있도록 하고 있다.
 
 ## 참고 자료
 
