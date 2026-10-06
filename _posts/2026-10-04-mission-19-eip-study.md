@@ -37,11 +37,11 @@ ERC-4337은 별도의 합의 계층 변경 없이 `UserOperation`, Bundler, Entr
 
 Pectra 업그레이드에 포함된 EIP-7702는 EOA가 다른 컨트랙트 코드에 실행을 위임할 수 있게 한다. Type 4 트랜잭션과 Authorization List, delegation indicator의 구조를 분석하고 메인넷의 OKX EIP-7702 Delegator 사용 거래를 확인했다. 위임 서명 피싱과 저장소 충돌 같은 새로운 보안 문제도 함께 다뤘다.
 
-### [4편 — EIP-1559: 가스비 경매를 예측 가능한 수수료 시장으로](/posts/eip-1559-fee-market/)
+### [EIP-1559: 가스비 경매를 예측 가능한 수수료 시장으로](/posts/eip-1559-fee-market/)
 
 EIP-1559는 사용자가 다른 사람의 입찰가를 추측하던 가스비 시장을 `base fee + priority fee` 구조로 바꿨다. base fee 조정 공식과 탄력적 블록 크기, 소각 구조를 계산 예제와 함께 설명하고, Etherscan의 실제 메인넷 블록에서 base fee와 burnt fee를 확인했다.
 
-### [5편 — EIP-4844: Blob 트랜잭션으로 Rollup 데이터 비용 낮추기](/posts/eip-4844-blob-transactions/)
+### [EIP-4844: Blob 트랜잭션으로 Rollup 데이터 비용 낮추기](/posts/eip-4844-blob-transactions/)
 
 EIP-4844는 Rollup 데이터가 비싼 영구 calldata를 사용하던 문제를 blob이라는 임시 데이터 공간으로 해결했다. Type 3 트랜잭션, KZG commitment, blob sidecar와 독립 수수료 시장을 분석하고 Blobscan에서 실제 Rollup blob 게시 현황을 확인했다.
 
