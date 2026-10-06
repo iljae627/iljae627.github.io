@@ -34,11 +34,11 @@ tags: [진로설계, 시장분석, 디지털포렌식, 커리어로드맵, 미�
 
 | 공고명 | 주요 요구 직무 | 링크 / 캡처 |
 | :--- | :--- | :--- |
-| **국정원 정기공채** | 암호학, 네트워크 보안, 시스템 구조 이해 | [링크](https://career.nis.go.kr:4017/info/guide.html) / ![캡처](/assets/img/nis.png) |
-| **경찰청 경채(포렌식)** | 디지털 매체 복구, 데이터 분석 기법 활용 | [링크](https://public.jinhakapply.com/PoliceV2/public/public_3.aspx) / ![캡처](/assets/img/cpl.png) |
-| **안랩 신입 채용** | 악성코드 분석, 리버싱, 사고 대응 프로세스 | [링크](https://ahnlab.recruiter.co.kr/career/Recruit) / ![캡처](/assets/img/alab.png) |
-| **SK쉴더스 CERT** | 24시간 위협 모니터링, 취약점 진단 | [링크](https://www.skshieldusapply.com/ko/o/107003) / ![캡처](/assets/img/sk.png) |
-| **금융보안원 기술직** | 금융 보안 사고 분석 및 인프라 보안 강화 | [링크](https://www.fsec.or.kr/bbs/detail?menuNo=258&bbsNo=11772) / ![캡처](/assets/img/gum.png) |
+| **국정원 정기공채** | 암호학, 네트워크 보안, 시스템 구조 이해 | [링크](https://career.nis.go.kr:4017/info/guide.html) / ![캡처](/assets/img/career/nis.png) |
+| **경찰청 경채(포렌식)** | 디지털 매체 복구, 데이터 분석 기법 활용 | [링크](https://public.jinhakapply.com/PoliceV2/public/public_3.aspx) / ![캡처](/assets/img/career/cpl.png) |
+| **안랩 신입 채용** | 악성코드 분석, 리버싱, 사고 대응 프로세스 | [링크](https://ahnlab.recruiter.co.kr/career/Recruit) / ![캡처](/assets/img/career/alab.png) |
+| **SK쉴더스 CERT** | 24시간 위협 모니터링, 취약점 진단 | [링크](https://www.skshieldusapply.com/ko/o/107003) / ![캡처](/assets/img/career/sk.png) |
+| **금융보안원 기술직** | 금융 보안 사고 분석 및 인프라 보안 강화 | [링크](https://www.fsec.or.kr/bbs/detail?menuNo=258&bbsNo=11772) / ![캡처](/assets/img/career/gum.png) |
 
 ---
 
