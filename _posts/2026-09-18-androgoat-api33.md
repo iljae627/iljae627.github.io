@@ -1,8 +1,8 @@
 ---
 title: "AndroGoat Kotlin"
 date: 2026-09-18 00:10:00 +0900
-categories: [Security, Android]
-tags: [androgoat, android, kotlin, owasp, mastg, frida, adb, mitmproxy, api33, mobile-security, writeup]
+categories: ["Bug Bounty"]
+tags: [androgoat, android, kotlin, owasp, mastg, frida, mobile-security]
 ---
 
 ## 1. 들어가며

@@ -1,8 +1,8 @@
 ---
 title: "[논문 리뷰] 스마트홈 아키텍처의 가시성 결함(Visibility Gap) 분석 : IoT 기기 '숨겨진 속성' 취약점 분석 "
 date: 2026-04-16 11:40:00 +0900
-categories: [보안/논문리뷰]
-tags: [ACM CCS 2025, IoT 보안, 스마트홈, 취약점분석, 오펜시브보안, 미션]
+categories: ["Research & Conference"]
+tags: [iot-security, smart-home, zigbee, vulnerability-analysis, paper-review]
 ---
 
 ## 0. 논문 기본 정보 및 선정 이유

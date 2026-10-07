@@ -1,8 +1,8 @@
 ---
 title: "Threat Intelligence"
 date: 2026-09-18 01:00:00 +0900
-categories: [CTF/Wargame, 리서치]
-tags: [threat-intelligence, apt, kimsuky, konni, babyshark, osint, malware, attribution, 북한]
+categories: ["Research & Conference"]
+tags: [threat-intelligence, apt, kimsuky, konni, babyshark, osint, malware]
 mermaid: true
 ---
 

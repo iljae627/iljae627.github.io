@@ -1,8 +1,8 @@
 ---
 title: CODEGATE 2026 컨퍼런스 후기
 date: 2026-07-28 10:00:00 +0900
-categories: [Conference, CODEGATE]
-tags: [CODEGATE, 코드게이트, 보안컨퍼런스, AI, 블록체인, 화이트해커, 인공지능]
+categories: ["Research & Conference"]
+tags: [codegate, cybersecurity-conference, ai-security, blockchain, white-hat]
 math: true
 ---
 

@@ -1,8 +1,8 @@
 ---
 title: "EIP-7702: 기존 EOA를 스마트 계정처럼 만드는 코드 위임"
 date: 2026-10-04 12:00:00 +0900
-categories: [Blockchain, Ethereum]
-tags: [Ethereum, EIP, EIP-7702, Pectra, EOA, Account-Abstraction, Type-4, Security, 미션19]
+categories: ["Development"]
+tags: [ethereum, eip-7702, eoa, account-abstraction, smart-account, pectra]
 mermaid: true
 hidden: true
 ---

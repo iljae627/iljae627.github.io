@@ -1,8 +1,8 @@
 ---
 title: "[Mission] 나의 진로 가치관 정립과 보안 시장 분석 리포트"
 date: 2026-04-10 11:30:00 +0900
-categories: [블로그/기술문서]
-tags: [진로설계, 시장분석, 디지털포렌식, 커리어로드맵, 미션]
+categories: ["Blog & Technical Documentation"]
+tags: [career-planning, cybersecurity, digital-forensics, job-market]
 ---
 
 보안 전문가라는 목표를 향해 나아가기 전, 제가 지향하는 가치와 실제 채용 시장의 요구사항을 분석해 보았습니다.

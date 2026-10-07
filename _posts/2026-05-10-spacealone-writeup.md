@@ -1,8 +1,8 @@
 ---
 title: "[SpaceAlone] write-up"
 date: 2026-05-10 21:00:00 +0900
-categories: [Wargame, SpaceAlone]
-tags: [pwnable, system-hacking, bof, write-up]
+categories: ["CTF & Wargame"]
+tags: [spacealone, pwnable, system-security, buffer-overflow, writeup]
 render_with_liquid: false
 ---
 

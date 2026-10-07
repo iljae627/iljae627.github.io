@@ -1,8 +1,8 @@
 ---
 title: "DEF CON CTF Qualifier 2026 참가 후기: 처음 남긴 두 문제의 기여"
 date: 2026-05-29 20:00:00 +0900
-categories: [CTF, Review]
-tags: [defcon34, defcon-qualifier, reversing, misc, networking, teamwork, ctf]
+categories: ["CTF & Wargame"]
+tags: [defcon, ctf, reverse-engineering, networking, teamwork, competition-review]
 ---
 
 ## TJCTF 1위, 그리고 바로 이어진 DEF CON 예선

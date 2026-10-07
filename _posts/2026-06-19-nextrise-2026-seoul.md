@@ -1,8 +1,8 @@
 ---
 title: "NextRise 2026 Seoul 참관기"
 date: 2026-06-19 20:30:00 +0900
-categories: [Exhibition, Tech-Log]
-tags: [NextRise2026, 넥스트라이즈, 코엑스, 스타트업, AWS, 엔비디아, A1pacax, 정보보안, AI보안, 대학생]
+categories: ["Research & Conference"]
+tags: [nextrise, startup, cloud, ai, cybersecurity, exhibition-review]
 math: true
 mermaid: true
 ---

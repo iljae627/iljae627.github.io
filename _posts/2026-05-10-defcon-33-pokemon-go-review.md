@@ -1,8 +1,8 @@
 ---
 title: "DEF CON 33 Review: 포켓몬 GO 안티 치트 메커니즘 분석과 리버싱의 정수"
 date: 2026-05-10 22:50:00 +0900
-categories: [Cybersecurity, Reverse Engineering]
-tags: [defcon, pokemon-go, reverse-engineering, security-analysis, frida, cryptography]
+categories: ["CTF & Wargame"]
+tags: [defcon, pokemon-go, reverse-engineering, anti-cheat, frida, cryptography]
 math: true
 mermaid: true
 ---

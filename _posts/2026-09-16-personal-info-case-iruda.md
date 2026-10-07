@@ -1,8 +1,8 @@
 ---
 title: "[판례 분석] AI 챗봇 '이루다' 학습용 개인정보·민감정보 무단 활용 손해배상 사건 분석"
 date: 2026-09-16 16:30:00 +0900
-categories: [블로그/기술문서, 리서치]
-tags: [개인정보보호법, 판례분석, 이루다, 스캐터랩, AI윤리, 개인정보유출, 민감정보, 가명정보]
+categories: ["Research & Conference"]
+tags: [privacy-law, case-analysis, ai-ethics, personal-data, sensitive-data, pseudonymization]
 math: true
 mermaid: true
 ---

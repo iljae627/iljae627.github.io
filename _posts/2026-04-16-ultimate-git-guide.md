@@ -1,8 +1,8 @@
 ---
 title: "Git : 기초부터 심화까지"
 date: 2026-04-16 03:50:00 +0900
-categories: [개발/기타]
-tags: [Git, Github, 버전관리, 형상관리, 기술면접, 미션완료, 데이터구조]
+categories: ["Development"]
+tags: [git, github, version-control, source-control, technical-interview]
 ---
 
 Git은 단순히 작업 기록을 남기는 도구가 아니라, 프로젝트의 전체 스냅샷을 유기적인 그래프 구조로 관리하는 시스템입니다. 명령어가 방대해 보이지만 **저장, 이동, 합치기, 되돌리기, 공유**라는 5가지 핵심 메커니즘을 중심으로 각 명령어의 세부 동작과 파생 옵션들을 심층 분석합니다.

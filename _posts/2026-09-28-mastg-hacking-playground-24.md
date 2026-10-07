@@ -1,8 +1,8 @@
 ---
 title: "OWASP MASTG Hacking Playground: Android 취약점 24종 실습"
 date: 2026-09-28 15:30:00 +0900
-categories: [Security, Android]
-tags: [owasp, mastg, android, adb, jadx, frida, sql-injection, webview, dexclassloader, ssl-pinning, mitmproxy, writeup, mission57]
+categories: ["Bug Bounty"]
+tags: [owasp, mastg, android, adb, jadx, frida, mobile-security, writeup]
 ---
 
 ## 1. 들어가며

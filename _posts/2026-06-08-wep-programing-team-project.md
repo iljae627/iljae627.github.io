@@ -1,8 +1,8 @@
 ---
 title: "InfoSec Hub 개발 기록"
 date: 2026-06-9 18:00:00 +0900
-categories: [Project, Web]
-tags: [HTML, CSS, JavaScript, Portfolio, Security, Frontend]
+categories: ["Development"]
+tags: [html, css, javascript, frontend, team-project, cybersecurity]
 render_with_liquid: false
 ---
 

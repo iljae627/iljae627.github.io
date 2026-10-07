@@ -1,8 +1,8 @@
 ---
 title: "[공모전] 디지털 페르소나 권리 보호 및 관리 정책 아이디어"
 date: 2026-04-10 02:10:00 +0900
-categories: [공모전/자격증]
-tags: [디지털페르소나, 잊혀질권리, 정보보호, KISIA, 정책공모전]
+categories: ["Competition & Certification"]
+tags: [digital-persona, right-to-be-forgotten, privacy, security-policy, kisia]
 ---
 
 **KISIA(한국정보보호산업협회)**에서 주관한 정보보호 정책 아이디어 공모전에 참가하며 제안했던 **'디지털 페르소나 관리 및 보호 정책'**에 대한 기록입니다.

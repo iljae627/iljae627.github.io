@@ -1,8 +1,8 @@
 ---
 title: "2026 INC0GNITO 아이디어톤 도전기: 약관은 LLM이 지킨다"
 date: 2026-05-10 00:40:48 +0900
-categories: [Experience, Contest]
-tags: [INC0GNITO, 아이디어톤, LLM, 개인정보보호, 약관분석]
+categories: ["Competition & Certification"]
+tags: [incognito, ideathon, llm, privacy, terms-analysis]
 ---
 
 ## 🚀 들어가며

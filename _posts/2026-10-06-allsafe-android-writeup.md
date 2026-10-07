@@ -1,8 +1,8 @@
 ---
 title: "Allsafe Android README Challenge 1~12 Write-up"
 date: 2026-10-06 17:00:00 +0900
-categories: [Security, Android]
-tags: [allsafe, android, ctf, wargame, frida, apktool, smali, jadx, owasp-mastg, mobile-security]
+categories: ["Bug Bounty"]
+tags: [allsafe, android, ctf, wargame, frida, apktool, smali, mobile-security]
 ---
 
 ## 1. 들어가며

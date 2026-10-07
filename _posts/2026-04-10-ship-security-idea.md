@@ -1,8 +1,8 @@
 ---
 title: "[공모전] AI 선박 통신 페르소나 기반 사이버 위협 탐지 시스템"
 date: 2026-04-10 02:20:00 +0900
-categories: [공모전/자격증]
-tags: [조선해운, 빅데이터, AI보안, 위협탐지, 공모전]
+categories: ["Competition & Certification"]
+tags: [maritime-security, ai-security, anomaly-detection, threat-detection, big-data]
 ---
 
 **조선해운 빅데이터 활용 아이디어 공모전**에 참가하며 제안했던 선박 보안 솔루션에 대한 기록입니다. 

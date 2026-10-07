@@ -1,8 +1,8 @@
 ---
 title: "네트워크 관리사 2급 자격증 취득 후기 및 공부 방법"
 date: 2026-04-10 01:45:00 +0900
-categories: [공모전/자격증]
-tags: [자격증, 네트워크, 네트워크관리사, 자기계발]
+categories: ["Competition & Certification"]
+tags: [certification, network, network-specialist, study-guide]
 ---
 
 정보보안 전공자로서 네트워크의 기초 체력을 기르기 위해 도전했던 **네트워크 관리사 2급** 자격증 취득 기록입니다. 

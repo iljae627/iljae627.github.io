@@ -2,8 +2,8 @@
 layout: post
 title: "AFL++ 퍼저 실습기: WSL 환경 설치부터 첫 크래시(Crash) 탐지까지"
 date: 2026-06-03 15:25:00 +0900
-categories: [Cybersecurity, Fuzzing]
-tags: [aflplusplus, fuzzing, wsl, digital-forensics, vulnerability]
+categories: ["Bug Bounty"]
+tags: [aflplusplus, fuzzing, wsl, crash-analysis, vulnerability-research]
 toc: true
 comments: true
 ---

@@ -1,8 +1,8 @@
 ---
 title: "Ethernaut Level 0–40"
 date: 2026-10-02 10:00:00 +0900
-categories: [CTF/Wargame]
-tags: [Ethernaut, Solidity, Web3, Smart-Contract, EVM, CTF, Write-up, OpenZeppelin, 미션11]
+categories: ["CTF & Wargame"]
+tags: [ethernaut, solidity, ethereum, evm, smart-contract-security, wargame]
 mermaid: true
 ---
 

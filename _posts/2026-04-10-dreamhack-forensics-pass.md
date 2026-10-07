@@ -1,8 +1,8 @@
 ---
 title: "Dreamhack: 포렌식 입문(Forensics Path) 워게임 풀이 및 도구 활용 정리"
 date: 2026-04-10 02:00:00 +0900
-categories: [CTF/Wargame]
-tags: [Dreamhack, Forensics, HxD, Autopsy, 워게임]
+categories: ["CTF & Wargame"]
+tags: [dreamhack, digital-forensics, hxd, autopsy, wargame]
 ---
 
 최근 **드림핵(Dreamhack)**의 로드맵 중 하나인 **포렌식 입문**를 진행하며 워게임 문제들을 해결했습니다. 

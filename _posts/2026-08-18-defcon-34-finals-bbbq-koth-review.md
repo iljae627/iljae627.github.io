@@ -1,8 +1,8 @@
 ---
 title: "DEF CON 34 Finals KOTH 참가 후기: BBBQ VM과 끝없는 점수 최적화"
 date: 2026-08-18 20:00:00 +0900
-categories: [CTF, Reverse Engineering]
-tags: [defcon34, defcon-finals, koth, bbbq, reverse-engineering, vm, bytecode-optimization, ctf]
+categories: ["CTF & Wargame"]
+tags: [defcon, ctf, koth, reverse-engineering, virtual-machine, bytecode-optimization]
 math: true
 ---
 

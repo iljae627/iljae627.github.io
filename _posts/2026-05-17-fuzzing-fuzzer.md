@@ -1,8 +1,8 @@
 ---
 title: "퍼징(Fuzzing) 총정리: 원리부터 핵심 퍼저 비교와 한계점까지"
 date: 2026-05-17 17:30:00 +0900
-categories: [Vulnerability Research, System Security]
-tags: [fuzzing, fuzzer, architecture, instrumentation, afl++, jackalope, libfuzzer, pwnable, crash-triage]
+categories: ["Bug Bounty"]
+tags: [fuzzing, fuzzer, aflplusplus, libfuzzer, instrumentation, crash-triage]
 toc: true
 comments: true
 math: true

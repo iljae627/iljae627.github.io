@@ -1,8 +1,8 @@
 ---
 title: "[CTF] 안드로이드 계산기 앱 로직 분석 및 트리거 추적 (Write-up)"
 date: 2026-05-11 9:00:00 +0900
-categories: [Information Security, Reversing]
-tags: [android, apk, reversing, jadx, ctf-writeup]
+categories: ["CTF & Wargame"]
+tags: [android, apk, reverse-engineering, jadx, ctf, writeup]
 ---
 
 

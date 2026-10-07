@@ -1,8 +1,8 @@
 ---
 title: "2026 Incognito Conference: 임베디드 취약점부터 성장을 위한 방법론까지"
 date: 2026-05-10 10:00:00 +0900
-categories: [Security, Conference]
-tags: [incognito, embedded, forensic, car-security, hacking, hspace]
+categories: ["Research & Conference"]
+tags: [incognito, embedded-security, digital-forensics, automotive-security, conference-review]
 math: true
 mermaid: true
 ---

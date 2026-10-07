@@ -1,7 +1,7 @@
 ---
 title: "KOI 맛집 배달"
 date: 2026-09-14 15:40:00 +0900
-categories: [개발, Algorithm]
+categories: ["Development"]
 tags: [jungol, koi, cpp, tree-dp, centroid-decomposition, optimization]
 math: true
 ---

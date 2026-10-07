@@ -1,8 +1,8 @@
 ---
 title: "[WSL 보안 실습] OverTheWire Bandit Level 0 → 25"
 date: 2026-04-17 12:50:00 +0900
-categories: [보안/라이트업]
-tags: [WSL, Bandit, 리눅스, CLI, 정보보안, 워크게임, Writeup]
+categories: ["CTF & Wargame"]
+tags: [overthewire, bandit, wsl, linux, cli, writeup]
 ---
 
 ## 0. 서론: 왜 Bandit인가?

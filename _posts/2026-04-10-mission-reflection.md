@@ -1,8 +1,8 @@
 ---
 title: "[Mission] 나의 활동 기록을 정리하며"
 date: 2026-04-10 02:30:00 +0900
-categories: [블로그/기술문서]
-tags: [회고, 미션, 보안공부, 디지털포렌식, 성장]
+categories: ["Blog & Technical Documentation"]
+tags: [retrospective, cybersecurity, digital-forensics, learning, mission]
 ---
 
 이번 블로그 개설 미션을 통해 6개의 카테고리로 활동을 분류하며, 제가 가진 역량의 현주소를 명확히 마주하게 되었습니다. 정리된 글들보다 아직 비어있는 칸들이 더 많다는 사실이 현재 제가 가진 가장 큰 부족함입니다.

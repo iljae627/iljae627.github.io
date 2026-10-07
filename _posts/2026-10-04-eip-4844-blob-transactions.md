@@ -1,8 +1,8 @@
 ---
 title: "EIP-4844: Blob 트랜잭션으로 Rollup 데이터 비용 낮추기"
 date: 2026-10-04 14:00:00 +0900
-categories: [Blockchain, Ethereum]
-tags: [Ethereum, EIP, EIP-4844, Proto-Danksharding, Blob, Rollup, Dencun, Layer2, 미션19]
+categories: ["Development"]
+tags: [ethereum, eip-4844, proto-danksharding, blob, rollup, layer-2]
 mermaid: true
 hidden: true
 ---

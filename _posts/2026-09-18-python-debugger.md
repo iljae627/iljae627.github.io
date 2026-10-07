@@ -1,8 +1,8 @@
 ---
 title: "나만의 Python 디버거 만들기"
 date: 2026-09-18 00:20:00 +0900
-categories: [개발, Python]
-tags: [python, debugger, sys-settrace, frame, tracing, debugging-book, mission61]
+categories: ["Development"]
+tags: [python, debugger, sys-settrace, tracing, frame, debugging]
 ---
 
 ## 1. 시작하며

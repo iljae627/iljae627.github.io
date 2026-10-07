@@ -1,8 +1,8 @@
 ---
 title: "HexTree Android Track"
 date: 2026-10-01 21:40:00 +0900
-categories: [Security, Android]
-tags: [hextree, android, bugbounty, adb, intent, deeplink, service, broadcast-receiver, content-provider, fileprovider, webview, frida, writeup, mission47]
+categories: ["Bug Bounty"]
+tags: [hextree, android, bug-bounty, intent, content-provider, webview, frida]
 ---
 
 ## 1. 들어가며
