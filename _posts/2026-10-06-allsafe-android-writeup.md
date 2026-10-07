@@ -7,7 +7,7 @@ tags: [allsafe, android, ctf, wargame, frida, apktool, smali, mobile-security]
 
 ## 1. 들어가며
 
-[Allsafe Android](https://github.com/t0thkr1s/allsafe-android) README에 적힌 12개 과제를 순서대로 분석해보자. Allsafe는 실제 앱에서 자주 만나는 로그 노출, 하드코딩 시크릿, exported component, WebView, SQL injection, 동적 코드 로딩, 인증서 피닝, Smali 패치와 JNI 후킹을 한 앱에 모아 둔 교육용 프로젝트다.
+[Allsafe Android](https://github.com/t0thkr1s/allsafe-android) README에 적힌 12개 문제를 순서대로 분석해보았다. Allsafe는 실제 앱에서 자주 만나는 로그 노출, 하드코딩 시크릿, exported component, WebView, SQL injection, 동적 코드 로딩, 인증서 피닝, Smali 패치와 JNI 후킹을 한 앱에 모아 둔 교육용 프로젝트다.
 
 대상은 `master`의 `c7329155cbbd0a2079a48bbfcaa23a6666899ee9` 커밋과 v1.6 릴리스 APK다.
 
@@ -42,7 +42,7 @@ tags: [allsafe, android, ctf, wargame, frida, apktool, smali, mobile-security]
 | 11 | Smali Patching | `INACTIVE`를 `ACTIVE`로 바꿔 재빌드·서명·실행 |
 | 12 | Native Library | JNI 반환값 `0`을 `1`로 바꿔 틀린 비밀번호로 통과 |
 
-## 4. README Challenge 1~12
+## 4. Challenge 1~12
 
 ### 4.1 Insecure Logging
 
@@ -64,7 +64,7 @@ adb logcat --pid <PID> -s ALLSAFE:D '*:S'
 
 ![Insecure Logging 입력 화면](/assets/img/allsafe-android/01-insecure-logging.png)
 
-Android 4.1 이후 일반 앱이 다른 앱의 전체 로그를 읽는 것은 제한된다. 그러나 ADB, root, 디버그 빌드, 크래시 수집기와 개발 장비에서는 여전히 회수될 수 있다. 토큰·비밀번호·개인정보를 로그에 넣지 않고 릴리스 빌드에서는 디버그 로그를 제거해야 한다.
+Android 4.1 이후 일반 앱이 다른 앱 전체 로그를 읽는 것은 제한된다. 그러나 ADB, root, 디버그 빌드, 크래시 수집기와 개발 장비에서는 여전히 회수될 수 있다. 토큰·비밀번호·개인정보를 로그에 넣지 않고 릴리스 빌드에서는 디버그 로그를 제거해야 한다.
 
 ### 4.2 Hardcoded Credentials
 
@@ -101,11 +101,9 @@ Java.perform(function () {
 });
 ```
 
-콘솔에는 `[MISSION56] RootBeer.isRooted -> false`가 출력됐고 앱은 `Congrats, root is not detected!`를 표시했다.
+콘솔에는 `[MISSION56] RootBeer.isRooted -> false`가 출력됐고 앱은 `Congrats, root is not detected!`가 표시했다.
 
 ![Frida로 RootBeer 반환값 우회](/assets/img/allsafe-android/03-root-frida-bypass.png)
-
-루트 탐지는 우회 비용을 올리지만 보안적 측면은 아니다. 중요한 승인은 서버 측 권한 검사, 재인증, 하드웨어 기반 무결성 신호와 함께 처리해야 한다.
 
 ### 4.4 Arbitrary Code Execution
 
@@ -124,7 +122,7 @@ if (packageName.startsWith("infosecadventures.allsafe")) {
 }
 ```
 
-`infosecadventures.allsafe.poc` 패키지에 아래 클래스를 넣은 최소 PoC APK를 직접 빌드하고 설치했다.
+`infosecadventures.allsafe.poc` 패키지에 아래 클래스를 넣은 최소 PoC APK를 빌드하고 설치했다.
 
 ```java
 package infosecadventures.allsafe.plugin;
@@ -145,7 +143,7 @@ Allsafe를 강제 종료한 뒤 다시 실행하자 다음 로그가 남았다.
 E ALLSAFE_POC: MISSION56 external Loader.loadPlugin executed inside Allsafe process
 ```
 
-두 번째 공격면도 있다. `/sdcard/Download/allsafe_updater.apk`가 존재하면 `DexClassLoader`로 `VersionCheck.getLatestVersion()`을 호출한다. 외부 저장소는 코드 무결성을 보장하지 않는다. 동적 로딩을 제거하는 것이 최선이며, 꼭 필요하다면 앱 내부 저장소, 허용된 서명 인증서와 아티팩트 해시를 실행 전에 검증해야 한다.
+두 번째 공격면은 `/sdcard/Download/allsafe_updater.apk`가 존재하면 `DexClassLoader`로 `VersionCheck.getLatestVersion()`을 호출한다. 동적 로딩을 제거하며, 꼭 필요하다면 앱 내부 저장소, 허용된 서명 인증서와 아티팩트 해시를 실행 전에 검증해야 한다.
 
 ### 4.5 Secure Flag Bypass
 
@@ -168,11 +166,11 @@ setFlags.implementation = function (flags, mask) {
 };
 ```
 
-콘솔에서 `Window.setFlags FLAG_SECURE stripped`가 여러 번 출력됐고, 원래 검은색이던 ADB 캡처에 화면이 나타났다.
+콘솔에서 `Window.setFlags FLAG_SECURE stripped`가 여러 번 출력됐고, 원래 검은색이던 캡처에 화면이 나타났다.
 
 ![FLAG_SECURE 제거 후 보이는 비밀번호 화면](/assets/img/allsafe-android/11-secure-flag-bypass.png)
 
-README 설명처럼 이는 런타임 계측 연습에 가깝다. `FLAG_SECURE`는 실수로 인한 캡처를 줄이는 유효한 방어지만, 앱 프로세스를 이미 계측하는 공격자까지 막지는 못한다.
+`FLAG_SECURE`는 실수로 인한 캡처를 줄이는 방법이지만, 앱 프로세스를 계측하는 공격까지 막지는 못한다.
 
 ### 4.6 Certificate Pinning Bypass
 
@@ -201,9 +199,9 @@ Java.perform(function () {
 
 ![Certificate Pinning 과제 화면](/assets/img/allsafe-android/06-certificate-pinning.png)
 
-이번 API 35 에뮬레이터에서는 가상 NIC가 기본 route를 받지 못해 `Unable to resolve host "httpbin.io"`에서 요청이 먼저 종료됐다. 따라서 후킹 지점과 스크립트 로드는 검증했지만 HTTPS 성공 응답까지 재현했다고 쓰지는 않는다. 별도의 정상 네트워크 단말에서는 Burp CA 신뢰 설정 후 위 스크립트로 pin 검사와 CA 검사를 분리해 확인해야 한다.
+API 35 에뮬레이터에서는 가상 NIC가 기본 route를 받지 못해 `Unable to resolve host "httpbin.io"`에서 요청이 먼저 종료됐다. 후킹 지점과 스크립트 로드를 검증했다. 별도의 정상 네트워크 단말에서는 Burp CA 신뢰 설정 후 위 스크립트로 pin 검사와 CA 검사를 분리해 확인해야 한다.
 
-또한 실행 시 관측한 peer chain을 그대로 다음 pin으로 채택하는 설계는 정적인 pinning과 다르다. 최초 연결이 공격자에게 장악된 경우 공격자의 인증서를 학습할 수 있다.
+또한 실행 시 관측한 peer chain을 그대로 다음 pin으로 채택하는 설계는 정적 pinning과 다르다. 최초 연결이 공격당한 경우 공격자의 인증서를 학습할 수 있다.
 
 ### 4.7 Insecure Broadcast Receiver
 
@@ -248,7 +246,7 @@ adb shell am start -W \
 
 ![정적 key로 딥링크 과제 통과](/assets/img/allsafe-android/04-deep-link.png)
 
-클라이언트에 들어 있는 정적 key는 권한 검증 수단이 될 수 없다. 서버 세션과 단발성 nonce로 상태를 검증하고, HTTPS App Link는 정확한 host/path, `autoVerify`, Digital Asset Links를 함께 사용해야 한다.
+클라이언트에 들어 있는 정적 key는 권한 검증 수단이 될 수 없기에 서버 세션과 단발성 nonce로 상태를 검증하고, HTTPS App Link는 정확한 host/path, `autoVerify`, Digital Asset Links를 사용해야 한다.
 
 ### 4.9 SQL Injection
 
@@ -261,11 +259,11 @@ db.rawQuery(
 )
 ```
 
-username에 `admin' -- `, password에 임의 값 `x`를 입력했다. 생성된 쿼리에서 뒤쪽 비밀번호 검사가 주석 처리된다. 앱이 `User: admin`과 저장된 MD5 `21232f297a57a5a743894a0e4a801fc3`을 표시했다.
+username에 `admin' -- `, password에 임의 값 `x`를 입력했다. 생성된 쿼리에서 뒤쪽 비밀번호 검사가 주석 처리되고 `User: admin`과 저장된 MD5 `21232f297a57a5a743894a0e4a801fc3`을 표시했다.
 
 ![SQL 주석으로 비밀번호 검증 우회](/assets/img/allsafe-android/02-sql-injection.png)
 
-수정은 문자열 연결을 없애고 selection arguments를 사용하는 것이다.
+방어법은 문자열 연결을 없애고 selection arguments를 사용하는 것이다.
 
 ```kotlin
 db.rawQuery(
@@ -298,7 +296,7 @@ WebView 경고창에 `56`이 표시되어 JavaScript 실행을 확인했다.
 
 ![사용자 HTML에서 실행된 WebView JavaScript](/assets/img/allsafe-android/05-webview-xss.png)
 
-`file:///etc/hosts` 같은 URL도 입력할 수 있는 구조다. JavaScript·파일 접근은 기본 비활성화하고, 꼭 필요한 URL은 파싱 후 scheme과 정확한 host allowlist를 검사해야 한다. 앱 자산은 `WebViewAssetLoader` 사용을 고려한다.
+`file:///etc/hosts` 같은 URL도 입력할 수 있는 구조다. JavaScript·파일 접근은 기본 비활성화하고, 필요한 URL은 파싱 후 scheme과 정확한 host allowlist를 검사해야 한다. 자산은 `WebViewAssetLoader` 사용을 고려한다.
 
 ### 4.11 Smali Patching
 
@@ -366,19 +364,20 @@ Interceptor.attach(address, {
 
 ![JNI 반환값을 바꾼 Native Library 과제](/assets/img/allsafe-android/08-native-frida-hook.png)
 
-네이티브 라이브러리는 비밀 저장소가 아니다. Java/Kotlin보다 역공학 비용이 조금 높을 뿐이며 최종 승인과 장기 비밀값은 서버에 두어야 한다.
+네이티브 라이브러리는 Java/Kotlin보다 역공학 비용이 조금 높을 뿐이고 승인과 비밀값은 서버에 두어야 한다.
 
 ## 5. 정리
 
-12개 문제는 결국 같은 문제를 보여주고 있는것같다. 공격자는 APK, 리소스, 네이티브 라이브러리와 런타임 메모리를 모두 관찰하고 수정할 수 있다. 따라서 밑에 값은 클라이언트만 믿어서는 안 된다.
+12개 문제는 결국 같은 문제를 보여주고 있는것같다. 공격자는 APK, 리소스, 네이티브 라이브러리와 런타임 메모리를 모두 관찰하고 수정할 수 있다. 
 
 1. 하드코딩된 계정·토큰·딥링크 key
 2. RootBeer 결과와 `FLAG_SECURE` 같은 로컬 방어 상태
 3. Smali enum, JNI boolean 같은 권한 분기
 4. exported component와 WebView로 들어오는 외부 입력
 5. 문자열 연결 SQL과 외부 저장소에서 가져온 실행 코드
+위 다섯개 값은 클라이언트만 믿지 말자.
 
-이번 실습에서 인상적이었던 부분은 arbitrary code execution이었다. 패키지 이름 접두사가 같다는 이유로 `CONTEXT_IGNORE_SECURITY`와 외부 class loader를 사용하는 순간, 다른 앱의 코드가 Allsafe 시작 과정에 끼어들었다. 반대로 `FLAG_SECURE`, root detection, native 코드처럼 강해 보이는 보호도 앱 프로세스를 계측하거나 APK를 재서명할 수 있는 환경에서는 쉽게 바뀌었다.
+이번 실습에서 인상적이었던 부분은 arbitrary code execution이다. 패키지 이름 접두사가 같다는 이유로 `CONTEXT_IGNORE_SECURITY`와 외부 class loader를 사용하면 다른 앱의 코드가 Allsafe 시작 과정에 끼어든다. 반대로 `FLAG_SECURE`, root detection, native 코드처럼 보호된 것도 앱 프로세스를 계측하거나 APK를 재서명할 수 있는 환경에서는 쉽게 바뀌었다.
 
 ## 6. 참고 자료
 
