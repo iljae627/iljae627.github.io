@@ -1,7 +1,7 @@
 ---
 title: "ERC-4337: 프로토콜 변경 없이 구현한 계정 추상화"
 date: 2026-10-04 11:00:00 +0900
-categories: ["Development"]
+categories: ["Research & Conference"]
 tags: [ethereum, erc-4337, account-abstraction, smart-account, user-operation, entry-point]
 mermaid: true
 hidden: true
