@@ -389,5 +389,4 @@ Interceptor.attach(address, {
 - [Android Unsafe Deep Links](https://developer.android.com/privacy-and-security/risks/unsafe-use-of-deeplinks)
 - [Android WebView Unsafe File Inclusion](https://developer.android.com/privacy-and-security/risks/webview-unsafe-file-inclusion)
 - [OWASP SQL Injection Prevention Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/SQL_Injection_Prevention_Cheat_Sheet.html)
-- [Apktool Documentation](https://apktool.org/docs/)
 
