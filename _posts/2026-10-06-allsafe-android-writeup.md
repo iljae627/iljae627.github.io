@@ -1,5 +1,5 @@
 ---
-title: "Allsafe Android README Challenge 1~12 Write-up"
+title: "Android Challenge 1~12 Write-up"
 date: 2026-10-06 17:00:00 +0900
 categories: ["Bug Bounty"]
 tags: [allsafe, android, ctf, wargame, frida, apktool, smali, mobile-security]
@@ -7,9 +7,9 @@ tags: [allsafe, android, ctf, wargame, frida, apktool, smali, mobile-security]
 
 ## 1. 들어가며
 
-이번 미션은 [Allsafe Android](https://github.com/t0thkr1s/allsafe-android)의 README에 적힌 12개 과제를 순서대로 분석하는 것이다. Allsafe는 실제 앱에서 자주 만나는 로그 노출, 하드코딩 시크릿, exported component, WebView, SQL injection, 동적 코드 로딩, 인증서 피닝, Smali 패치와 JNI 후킹을 한 앱에 모아 둔 교육용 프로젝트다.
+[Allsafe Android](https://github.com/t0thkr1s/allsafe-android) README에 적힌 12개 과제를 순서대로 분석해보자. Allsafe는 실제 앱에서 자주 만나는 로그 노출, 하드코딩 시크릿, exported component, WebView, SQL injection, 동적 코드 로딩, 인증서 피닝, Smali 패치와 JNI 후킹을 한 앱에 모아 둔 교육용 프로젝트다.
 
-대상은 `master`의 `c7329155cbbd0a2079a48bbfcaa23a6666899ee9` 커밋과 v1.6 릴리스 APK다. 공개된 다른 풀이도 비교했지만, 아래 명령과 화면은 별도의 API 35 에뮬레이터에서 다시 실행했다.
+대상은 `master`의 `c7329155cbbd0a2079a48bbfcaa23a6666899ee9` 커밋과 v1.6 릴리스 APK다.
 
 ![Allsafe 실습 앱](/assets/img/allsafe-android/00-lab-home.png)
 
@@ -24,17 +24,6 @@ tags: [allsafe, android, ctf, wargame, frida, apktool, smali, mobile-security]
 | 동적 분석 | ADB 37.0.1, Frida 17.22.2 |
 | 정적·패치 분석 | 소스 코드, Apktool 3.0.3, Android Build Tools 35.0.0 |
 
-```bash
-adb root
-adb install allsafe.apk
-adb shell getprop ro.build.version.release
-# 15
-
-frida-ps -U | grep Allsafe
-# 4346  Allsafe
-```
-
-앱의 `MainActivity`는 시작할 때 모든 창에 `FLAG_SECURE`를 설정한다. 실행 화면을 기록하기 위해 5번에서는 Frida로 해당 플래그를 제거했고, Smali 패치 APK에서는 같은 호출의 플래그를 `0`으로 변경했다. 취약 로직 자체는 11번을 제외하고 수정하지 않았다.
 
 ## 3. 결과 요약
 
@@ -116,7 +105,7 @@ Java.perform(function () {
 
 ![Frida로 RootBeer 반환값 우회](/assets/img/allsafe-android/03-root-frida-bypass.png)
 
-루트 탐지는 우회 비용을 올리는 신호일 뿐 보안 경계가 아니다. 중요한 승인은 서버 측 권한 검사, 재인증, 하드웨어 기반 무결성 신호와 함께 처리해야 한다.
+루트 탐지는 우회 비용을 올리지만 보안적 측면은 아니다. 중요한 승인은 서버 측 권한 검사, 재인증, 하드웨어 기반 무결성 신호와 함께 처리해야 한다.
 
 ### 4.4 Arbitrary Code Execution
 
@@ -183,7 +172,7 @@ setFlags.implementation = function (flags, mask) {
 
 ![FLAG_SECURE 제거 후 보이는 비밀번호 화면](/assets/img/allsafe-android/11-secure-flag-bypass.png)
 
-README 설명처럼 이는 취약점 판정보다 런타임 계측 연습에 가깝다. `FLAG_SECURE`는 실수로 인한 캡처를 줄이는 유효한 방어지만, 앱 프로세스를 이미 계측하는 공격자까지 막는 완전한 경계는 아니다.
+README 설명처럼 이는 런타임 계측 연습에 가깝다. `FLAG_SECURE`는 실수로 인한 캡처를 줄이는 유효한 방어지만, 앱 프로세스를 이미 계측하는 공격자까지 막지는 못한다.
 
 ### 4.6 Certificate Pinning Bypass
 
@@ -342,7 +331,7 @@ apksigner verify --verbose --print-certs allsafe-patched.apk
 
 ![Smali 패치 후 성공 분기](/assets/img/allsafe-android/07-smali-patched.png)
 
-클라이언트의 enum이나 boolean 한 개는 권한 검사가 아니다. 결제·관리자·라이선스 같은 중요한 상태는 서버가 판단해야 한다.
+클라이언트의 enum이나 boolean 한 개는 권한 검사가 아니기에, 결제·관리자·라이선스 같은 중요한 상태는 서버가 판단해야 한다.
 
 ### 4.12 Native Library
 
@@ -381,7 +370,7 @@ Interceptor.attach(address, {
 
 ## 5. 정리
 
-12개 과제는 결국 같은 원칙으로 모인다. 공격자는 APK, 리소스, 네이티브 라이브러리와 런타임 메모리를 모두 관찰하고 수정할 수 있다. 따라서 다음 값은 클라이언트만 믿어서는 안 된다.
+12개 문제는 결국 같은 문제를 보여주고 있는것같다. 공격자는 APK, 리소스, 네이티브 라이브러리와 런타임 메모리를 모두 관찰하고 수정할 수 있다. 따라서 밑에 값은 클라이언트만 믿어서는 안 된다.
 
 1. 하드코딩된 계정·토큰·딥링크 key
 2. RootBeer 결과와 `FLAG_SECURE` 같은 로컬 방어 상태
@@ -389,9 +378,7 @@ Interceptor.attach(address, {
 4. exported component와 WebView로 들어오는 외부 입력
 5. 문자열 연결 SQL과 외부 저장소에서 가져온 실행 코드
 
-이번 실습에서 특히 인상적이었던 부분은 arbitrary code execution이었다. 단순히 패키지 이름 접두사가 같다는 이유로 `CONTEXT_IGNORE_SECURITY`와 외부 class loader를 사용하는 순간, 다른 앱의 코드가 Allsafe 시작 과정에 끼어들었다. 반대로 `FLAG_SECURE`, root detection, native 코드처럼 강해 보이는 보호도 앱 프로세스를 계측하거나 APK를 재서명할 수 있는 환경에서는 쉽게 바뀌었다.
-
-다만 실습 결과를 실제 제품의 기본 공격 가능성과 혼동하면 안 된다. 여기서는 루팅 가능한 교육용 에뮬레이터, ADB root, 재서명 APK와 Frida 서버를 사용했다. 각 결과를 보고할 때 필요한 공격자 권한과 전제 조건을 함께 적는 것이 중요하다.
+이번 실습에서 인상적이었던 부분은 arbitrary code execution이었다. 패키지 이름 접두사가 같다는 이유로 `CONTEXT_IGNORE_SECURITY`와 외부 class loader를 사용하는 순간, 다른 앱의 코드가 Allsafe 시작 과정에 끼어들었다. 반대로 `FLAG_SECURE`, root detection, native 코드처럼 강해 보이는 보호도 앱 프로세스를 계측하거나 APK를 재서명할 수 있는 환경에서는 쉽게 바뀌었다.
 
 ## 6. 참고 자료
 
