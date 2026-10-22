@@ -224,3 +224,4 @@ OWASP는 SQL Injection 대응의 우선순위로 prepared statement/parameterize
 - [OWASP Juice Shop 공식 프로젝트 페이지](https://owasp-juice.shop/)
 - [OWASP SQL Injection Prevention Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/SQL_Injection_Prevention_Cheat_Sheet.html)
 - [OWASP Authorization Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Authorization_Cheat_Sheet.html)
+ 
