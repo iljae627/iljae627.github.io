@@ -1,5 +1,5 @@
 ---
-title: "나이츠 프론티어 2기 수료 회고: 55개의 별로 채운 7개월"
+title: "나이츠 프론티어 2기 수료 회고"
 date: 2026-11-01 00:00:00 +0900
 categories: ["Blog & Technical Documentation"]
 tags: [knights-frontier, hspace, cybersecurity, retrospective, android-security, ctf, digital-forensics]
