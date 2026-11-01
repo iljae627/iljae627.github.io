@@ -225,3 +225,6 @@ AI가 분석 속도를 높여 준 것은 사실이지만, 최종 판단은 언�
 그리고 그때도 분명 마지막에는 같은 말을 하고 있을 것 같다.
 
 **“조금만 더 줄일 수 있지 않을까?”**
+
+![0](/assets/img/defcon-final/KakaoTalk_20261026_125506396.jpg)
+![0](/assets/img/defcon-final/KakaoTalk_20261027_130913276.png)
