@@ -1,5 +1,5 @@
 ---
-title: "[Mission] 나의 진로 가치관 정립과 보안 시장 분석 리포트"
+title: "나의 진로 가치관 정립과 보안 시장 분석 리포트"
 date: 2026-04-10 11:30:00 +0900
 categories: ["Blog & Technical Documentation"]
 tags: [career-planning, cybersecurity, digital-forensics, job-market]
